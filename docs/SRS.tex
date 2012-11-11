@@ -1,0 +1,190 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[czech]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=blue
+}
+\urlstyle{same}
+\def\refname{Li­teratura}
+
+% Title Page
+\title{Software requirements specification - Skladník}
+\author{Martin Nuc}
+\setlength{\parskip}{1ex}
+\setlength{\parindent}{0.3in}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+\section{Úvod}
+\subsection{Účel dokumentu}
+Tento dokument slouží jako specifikace požadavků na aplikaci „Skladník“. Podrobně stanovuje rozsah projektu a funkční i nefunkční požadavky.
+
+\subsection{Úvod do problematiky}
+U nápojových a kusových automatů se stává, že se některé zboží ztratí. Důvodem může být buď, že automat někdo vykrade nebo že zboží odcizí samotný technik, který má automat na starost. Vedení společnosti nemá možnost zjistit, zda zboží krade technik, a proto je třeba zavést pravidelnou inventuru. Automaty mají počítadla prodaných kusů zboží, které se dají při inventuře využít. Každý technik se stará a svěřené automaty. Nemá k nim tedy přístup nikdo jiný než on.
+
+Tento problém by měl řešit systém skladník, který poskytne kontrolu nad zbožím od skladu, přes technika a automat až po peníze za prodané zboží.
+
+\section{Celkový popis}
+\subsection{Popis systému}
+Systém bude umožňovat převod zboží ze skladu k technikovi. Technik pak se zbožím pojede k automatu, kde mu aplikace nabídne nejprve vybrat prošlé zboží a poté doplnění zboží. Tím dojde k převodu zboží od technika do automatu.
+
+V případě, že byl automat vykraden bude mít technik možnost tuto skutečnost mobilním telefonem vyfotografovat. Zároveň specifikuje kolik kusů jakého výrobku bylo odcizeno (lze poznat z prázdných přihrádek ve spirále). Takové zboží se nebude převádět zpět k technikovi, ale bude zaznamenáno ke danému automatu pod sekcí ZTRÁTY.
+
+Hotovost z mincovníku a prošlé zboží, které z automatu vybral odevzdá na sklad.
+
+Technik bude mít také možnost zaznamenat servisní zásah na automatu. Do servisního zásahu spadá:
+\begin{enumerate}
+	\item Preventivní servis
+	\item Oprava automatu - závadu zjistí technik a opraví
+	\item Poškození automatu - automat poškodil někdo cizí, technik
+\end{enumerate}
+
+V den, kdy se má dělat inventura, pojedou technici dva. Jeden na doplňování zboží a druhý, aby zaznamenal údaje z počítadel a aktuální stav zboží v automatu.
+
+Součástí systému budou dvě aplikace. Jedna bude určena pro mobilní telefony a druhá bude určena pro PC. První aplikaci budou používat technici a druhou bude používat skladník a vedení společnosti. V systému budou uživatelé rozděleni do rolí. Vedení a skladník se do systému budou přihlašovat pomocí uživatelského jména a hesla. Technici do systému získají přístup spárováním identifikačního čísla telefonu se záznamem technika v databázi při obdržení telefonu.
+
+Skladník bude mít také možnost vydat zboží některému z uživatelů pro tzv. osobní spotřebu. Vedení společnosti pak záznamy z osobní spotřeby uživateli strhne z výplaty.
+
+\subsection{Základní popis funkcí aplikace pro PC}
+\begin{itemize}
+  \item Přihlášení a odhlášení uživatelů
+  \item Vytváření, editace, mazání uživatelů a nastavování jejich rolí
+  \item Zadávání, editace a odstraňování výrobků
+  \item Prohlížení záznamů o vykradení automatu
+  \item Výstupy do aplikace Microsoft Excel
+  \item Vydání zboží technikovi pomocí skenování čárového kódu
+  \item Příjem hotovosti a prošlého zboží zpět do skladu
+  \item Výdej zboží pro osobní spotřebu
+\end{itemize}
+
+\subsection{Základní popis funkcí aplikace pro mobilní telefony}
+
+\begin{itemize}
+  \item Doplnění automatu
+  \item Odebrání prošlého zboží
+  \item Záznam vykradeného automatu
+  \item Inventura
+  \begin{itemize}
+  	\item Záznam stavu zboží v automatu
+  	\item Záznam stavu počítadel
+  	\item Záznam stavu mincovníku
+  \end{itemize}
+\end{itemize}
+
+\subsection{Běhové prostředí}
+Serverová část bude provozována na serveru Glassfish 3.1 s databází MySQL 5.x. Předpokládá se, že administrátor má plný přístup k systému, kde server poběží.
+
+Klientské aplikace se budou k serveru připojovat pomocí WebServices, je tedy třeba, aby byla funkční počítačová síť mezi jednotlivými stanicemi a firewall umožňoval připojení k těmto službám.
+
+Aplikace pro PC bude provozována na systému Microsoft Windows verze XP, Vista, 7 a 8 s nainstalovaným Microsoft .NET Framework 4.0. Sekce pro skladníka by měla být přizpůsobena pro dotykovou obrazovku.
+
+Aplikace pro mobilní telefon bude provozována na telefonech s operačním systémem Android 4.x s možností pořizovat fotografie s rozlišením alespoň 5 Mpx.
+
+Dodavatel nezaručuje korektní chování s jinými verzemi serverových aplikací a
+klientských systémů.
+
+\subsection{Dokumentace}
+Součástí projektu je následující dokumentace:
+\begin{itemize}
+	\item Uživatelská příručka k aplikaci pro mobilní telefony - Dokument ve formátu PDF popisující jednotlivé volby aplikace s příklady
+	\item Uživatelská příručka k aplikaci pro skladníka - Dokument ve formátu PDF popisující aplikaci pro PC ze strany skladníka. 
+	\item Uživatelská příručka k aplikaci pro vedení společnosti - Dokument ve formátu PDF popisující možnosti aplikace pro PC pro vedení společnosti.
+	Instalační a konfigurační příručka - PDF dokument popisující architekturu systému, potřebné kroky k instalaci systému včetně serverové části, aplikace pro PC i aplikace pro mobilní telefony.
+\end{itemize}
+
+\subsection{Předpokládaná další rozšíření}
+Systém bude koncipován modulárně a v případě potřeby je možné přidat další funkčnost.
+
+\subsection{Negativní vymezení}
+Systém nebude hlídat, zda některý technik zboží krade. Bude pouze poskytovat pohled na data, která se nashromáždí při inventuře. Systém dále nebude hlídat fyzický stav zboží na skladě.
+
+\section{Požadavky na uživatelské rozhraní}
+\subsection{Aplikace pro mobilní telefony}
+Uživatelské rozhraní aplikace pro mobilní telefony bude uzpůsobeno ovládání dotykem podle Android Guidelines pro verzi Android 4.x~\cite{android_guidelines}. Uspořádání prvků uživatelského rozhraní bude přizpůsobeno pro rozlišení displeje 800x480 px.
+
+Na hlavní obrazovce bude menu, kde si uživatel vybere, zda chce ze svého skladu vzít zboží pro osobní spotřebu nebo zda se nachází u automatu. Pokud zvolí možnost, že se nachází u automatu, zařízení se zeptá, o který automat se jedná. Automat je identifikován číslem, které uživatel napíše na numerické klávesnici.
+
+Další obrazovka bude obsahovat akce spojené s automatem:
+
+\begin{enumerate}
+	\item Servis
+	\item Doplnění automatu
+	\item Inventura
+\end{enumerate}
+
+Možnost Inventura budou mít aktivní pouze určitá zařízení podle role jejich uživatele. Tato možnost bude nastavitelná v aplikaci pro vedení společnosti pro každý telefon, potažmo uživatele.
+
+\subsubsection{Servis}
+Pod položkou servis se nachází volby:
+\begin{enumerate}
+	\item Preventivní servis - při této volbě se zobrazí textové pole, kde technik popíše svou činnost. Nakonec specifikuje, zda je stav automatu v pořádku nebo ne.
+	\item Oprava - zde aplikace technikovi nabídne pořízení fotografie a textové pole. Technik bude mít možnost pořízení fotografie přeskočit a pouze vyplní do textového pole popis činnosti. Nakonec specifikuje, zda se automat podařilo opravit nebo ne.
+	\item Poškození automatu - technik bude vyzván k pořízení fotografie. Pořízení fotografie nepůjde přeskočit a v dalším kroku popíše závadu a případnou opravu do textového pole. Nakonec specifikuje, zda se závadu podařilo opravit nebo ne.
+\end{enumerate}
+
+\subsubsection{Doplnění automatu}
+Pod volbou doplnění automatu se skrývají možnosti:
+\begin{enumerate}
+	\item Doplnění zboží
+	\item Odebrání prošlého zboží
+	\item Automat vykraden
+\end{enumerate}
+
+Při doplňování zboží ho aplikace vyzve k naskenování čárového kódu zboží. Pokud výrobek čárový kód mít nebude, uživatel ho vyhledá pomocí textového pole podle názvu. Textové pole mu bude napovídat výrobky, které má technik u sebe evidované. V dalším kroku specifikuje doplňované množství. Nakonec se aplikace zeptá, zda to bylo poslední zboží, které doplňuje či nikoliv. Pokud ne, proces zadávání zboží proběhne znovu a pokud ano, tak se aplikace vrátí do menu Doplnění automatu.
+
+Volba odebrání prošlého zboží pracuje obdobně s rozdílem, že se technikovi zboží z jeho skladu odebírá. Našeptávač zboží bude našeptávat veškeré evidované zboží v systému.
+
+Při volbě automat vykraden bude uživatel vyzván k pořízení fotografie. V dalším kroku naskenuje čárový kód popř. vyhledá zboží pomocí textového pole a zadá množství, kolik kusů bylo odcizeno. Aplikace se ho stejně jako při doplňování zboží nakonec zeptá, zda je to poslední výrobek, který si přeje zadat.
+
+\subsubsection{Inventura}
+Technikovi s přístupem do sekce Inventura se zobrazí menu s těmito možnostmi:
+\begin{enumerate}
+	\item Stav zboží v automatu - sejme čárový kód, do textového pole zadá, kolik kusů se v automatu nachází. Nakonec zadá jaká je prodejní cena tohoto zboží v daném automatu.
+	\item Stav počítadel - 
+	\item Stav mincovníku
+\end{enumerate}
+
+
+\subsection{Aplikace pro PC}
+
+Část aplikace určena pro skladníka bude také přizpůsobena pro dotykové ovládání v rámci možností ovládacích prvků systému Microsoft Windows XP. Část aplikace určená pro vedení přizpůsobena dotykovému ovládáni nebude.
+
+
+Zbozi bez carovych kodu, zbozi, ktere nejde nascanovat
+
+
+I SERVIS
+preventivni servis
+oprava
+poskozeni automatu
+
+II Doplneni automatu
+- doplneni automatu
+- odebrani prosleho zbozi
+
+III Inventura
+
+\section{Funkce aplikace}
+\subsection{Instalace}
+\section{Nefunkční požadavky}
+\subsection{Lokalizace}
+\subsection{Požadavky na výkon}
+\subsection{Bezpečnostní opatření}
+\subsection{Licenční ujednání}
+\begin{thebibliography}{1}
+\bibitem{android_guidelines}
+	{\em Android User Interface Guidelines}
+		\url{http://developer.android.com/guide/practices/ui_guidelines/index.html}
+\end{thebibliography}
+\end{document}          
