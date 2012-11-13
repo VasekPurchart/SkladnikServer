@@ -45,9 +45,9 @@ Hotovost z mincovníku a prošlé zboží, které z automatu vybral odevzdá na 
 
 Technik bude mít také možnost zaznamenat servisní zásah na automatu. Do servisního zásahu spadá:
 \begin{enumerate}
-	\item Preventivní servis
-	\item Oprava automatu - závadu zjistí technik a opraví
-	\item Poškození automatu - automat poškodil někdo cizí, technik
+	\item \textbf{Preventivní servis}
+	\item \textbf{Oprava automatu} - závadu zjistí technik a opraví
+	\item \textbf{Poškození automatu} - automat poškodil někdo cizí, technik
 \end{enumerate}
 
 V den, kdy se má dělat inventura, pojedou technici dva. Jeden na doplňování zboží a druhý, aby zaznamenal údaje z počítadel a aktuální stav zboží v automatu.
@@ -97,10 +97,10 @@ klientských systémů.
 \subsection{Dokumentace}
 Součástí projektu je následující dokumentace:
 \begin{itemize}
-	\item Uživatelská příručka k aplikaci pro mobilní telefony - Dokument ve formátu PDF popisující jednotlivé volby aplikace s příklady
-	\item Uživatelská příručka k aplikaci pro skladníka - Dokument ve formátu PDF popisující aplikaci pro PC ze strany skladníka. 
-	\item Uživatelská příručka k aplikaci pro vedení společnosti - Dokument ve formátu PDF popisující možnosti aplikace pro PC pro vedení společnosti.
-	Instalační a konfigurační příručka - PDF dokument popisující architekturu systému, potřebné kroky k instalaci systému včetně serverové části, aplikace pro PC i aplikace pro mobilní telefony.
+	\item \textbf{Uživatelská příručka k aplikaci pro mobilní telefony} - Dokument ve formátu PDF popisující jednotlivé volby aplikace s příklady
+	\item \textbf{Uživatelská příručka k aplikaci pro skladníka} - Dokument ve formátu PDF popisující aplikaci pro PC ze strany skladníka. 
+	\item \textbf{Uživatelská příručka k aplikaci pro vedení společnosti} - Dokument ve formátu PDF popisující možnosti aplikace pro PC pro vedení společnosti.
+	\item \textbf{Instalační a konfigurační příručka} - PDF dokument popisující architekturu systému, potřebné kroky k instalaci systému včetně serverové části, aplikace pro PC i aplikace pro mobilní telefony.
 \end{itemize}
 
 \subsection{Předpokládaná další rozšíření}
@@ -118,9 +118,9 @@ Na hlavní obrazovce bude menu, kde si uživatel vybere, zda chce ze svého skla
 Další obrazovka bude obsahovat akce spojené s automatem:
 
 \begin{enumerate}
-	\item Servis
-	\item Doplnění automatu
-	\item Inventura
+	\item \textbf{Servis}
+	\item \textbf{Doplnění automatu}
+	\item \textbf{Inventura}
 \end{enumerate}
 
 Možnost Inventura budou mít aktivní pouze určitá zařízení podle role jejich uživatele. Tato možnost bude nastavitelná v aplikaci pro vedení společnosti pro každý telefon, potažmo uživatele.
@@ -128,17 +128,17 @@ Možnost Inventura budou mít aktivní pouze určitá zařízení podle role jej
 \subsubsection{Servis}
 Pod položkou servis se nachází volby:
 \begin{enumerate}
-	\item Preventivní servis - při této volbě se zobrazí textové pole, kde technik popíše svou činnost. Nakonec specifikuje, zda je stav automatu v pořádku nebo ne.
-	\item Oprava - zde aplikace technikovi nabídne pořízení fotografie a textové pole. Technik bude mít možnost pořízení fotografie přeskočit a pouze vyplní do textového pole popis činnosti. Nakonec specifikuje, zda se automat podařilo opravit nebo ne.
-	\item Poškození automatu - technik bude vyzván k pořízení fotografie. Pořízení fotografie nepůjde přeskočit a v dalším kroku popíše závadu a případnou opravu do textového pole. Nakonec specifikuje, zda se závadu podařilo opravit nebo ne.
+	\item \textbf{Preventivní servis} - při této volbě se zobrazí textové pole, kde technik popíše svou činnost. Nakonec specifikuje, zda je stav automatu v pořádku nebo ne.
+	\item \textbf{Oprava} - zde aplikace technikovi nabídne pořízení fotografie a textové pole. Technik bude mít možnost pořízení fotografie přeskočit a pouze vyplní do textového pole popis činnosti. Nakonec specifikuje, zda se automat podařilo opravit nebo ne.
+	\item \textbf{Poškození automatu} - technik bude vyzván k pořízení fotografie. Pořízení fotografie nepůjde přeskočit a v dalším kroku popíše závadu a případnou opravu do textového pole. Nakonec specifikuje, zda se závadu podařilo opravit nebo ne.
 \end{enumerate}
 
 \subsubsection{Doplnění automatu}
 Pod volbou doplnění automatu se skrývají možnosti:
 \begin{enumerate}
-	\item Doplnění zboží
-	\item Odebrání prošlého zboží
-	\item Automat vykraden
+	\item \textbf{Doplnění zboží}
+	\item \textbf{Odebrání prošlého zboží}
+	\item \textbf{Automat vykraden}
 \end{enumerate}
 
 Při doplňování zboží ho aplikace vyzve k naskenování čárového kódu zboží. Pokud výrobek čárový kód mít nebude, uživatel ho vyhledá pomocí textového pole podle názvu. Textové pole mu bude napovídat výrobky, které má technik u sebe evidované. V dalším kroku specifikuje doplňované množství. Nakonec se aplikace zeptá, zda to bylo poslední zboží, které doplňuje či nikoliv. Pokud ne, proces zadávání zboží proběhne znovu a pokud ano, tak se aplikace vrátí do menu Doplnění automatu.
@@ -150,33 +150,43 @@ Při volbě automat vykraden bude uživatel vyzván k pořízení fotografie. V 
 \subsubsection{Inventura}
 Technikovi s přístupem do sekce Inventura se zobrazí menu s těmito možnostmi:
 \begin{enumerate}
-	\item Stav zboží v automatu - sejme čárový kód, do textového pole zadá, kolik kusů se v automatu nachází. Nakonec zadá jaká je prodejní cena tohoto zboží v daném automatu.
-	\item Stav počítadel - 
-	\item Stav mincovníku
+	\item \textbf{Stav zboží v automatu} - zobrazí se tlačítko pro zahájení skenování čárového kódu a textové pole pro manuální vyhledávání zboží podle názvu (aplikace bude zboží našeptávat podle skladu daného automatu), v dalším kroku do textového pole zadá, kolik kusů se v automatu nachází. V posledním kroku bude textové pole, kam se zadá jaká je prodejní cena tohoto zboží v daném automatu.
+	\item \textbf{Stav počítadel} - aplikace zobrazí seznam počítadel (1 až n podle nastaveni automatu) s hodnotami z poslední inventury. Při kliknutí na počítadlo se zobrazí textové pole pro aktualizaci hodnoty. Po aktualizaci hodnoty bude toto počítadlo graficky odlišeno od ostatních počitadel.
+	\item \textbf{Stav mincovníku} - textové pole pro hodnotu mincí v mincovníku
 \end{enumerate}
-
 
 \subsection{Aplikace pro PC}
 
 Část aplikace určena pro skladníka bude také přizpůsobena pro dotykové ovládání v rámci možností ovládacích prvků systému Microsoft Windows XP. Část aplikace určená pro vedení přizpůsobena dotykovému ovládáni nebude.
 
+Společná část je přihlašovací dialog, kde uživatel vyplní uživatelské jméno a heslo. Podle jeho role se následně otevře rozhraní pro skladníka nebo rozhraní pro vedení.
 
-Zbozi bez carovych kodu, zbozi, ktere nejde nascanovat
+\subsubsection{Rozhraní pro skladníka}
+Nabídka rozhraní pro skladníka umožňuje:
+\begin{enumerate}
+	\item \textbf{Vydat zboží} - aplikace zobrazí seznam techniků, z kterého skladník vybere toho, kterému bude vyskladňovat zboží. Pak se zobrazí textové pole pro čárový kód zboží a textové pole pro počet kusů (zde bude přednastavená hodnota z databáze počet kusů v krabici), které ze skladu vydává. Vedle textového pole pro čárový kód bude tlačítko lupy, které poskytne dialog s textovým polem pro vyhledávání podle názvu. U seznamu zboží bude tlačítko pro přidání dalšího zboží.
+	\item \textbf{Osobní spotřeba} - uživatelské rozhraní bude stejné jako pro výdej zboží
+	\item \textbf{Příjem hotovosti a prošlého zboží} - aplikace zobrazí textové pole pro hodnotu hotovosti, kterou technik dovezl. Dále pak textové pole, pro čárový kód, tlačítko lupy pro vyhledávání jako při vydávání zboží a textové pole pro počet vracených položek.
+\end{enumerate}
 
+\subsubsection{Rozhraní pro vedení}
+Základní menu rozhraní pro vedení bude obsahovat položky:
+\begin{enumerate}
+	\item \textbf{Správa uživatelů} - zobrazí seznam uživatelů a tlačítko pro přidání nového uživatele. Po vybrání uživatele ze seznamu se zobrazí okno s textovým polem pro uživatelské jméno, textovým polem pro heslo a seznamem pro výběr role. Pokud bude role nastavena na technika nebo technika s inventurou, bude možné ze seznamu volných automatů přiřadit ty, které má mít na starost. Dále se zobrazí seznam položek, které má technik naskladněné.
+	\item \textbf{Správa automatů} - zobrazí se seznam všech automatů a tlačítko pro zavedení nového automatu. Po vybrání automatu ze seznamu se zobrazí textové pole pro název automatu, pole pro výběr technika, který automat spravuje, seznam číselníků s jejich hodnotami podle poslední inventury a  zbožím, které se na daném číselníku prodává spolu s jeho prodejní cenou v daném automatu.
+	\item \textbf{Správa zboží} - zobrazí seznam veškerého zboží v databázi a tlačítko pro zavedení nového zboží. Po vybrání ze seznamu se zobrazí textové pole pro název zboží, textové pole pro čárový kód a textové pole pro počet kusů v jedné krabici.
+	\item \textbf{Výstupy} TODO
+\end{enumerate}
 
-I SERVIS
-preventivni servis
-oprava
-poskozeni automatu
-
-II Doplneni automatu
-- doplneni automatu
-- odebrani prosleho zbozi
-
-III Inventura
 
 \section{Funkce aplikace}
+\subsection{Sledování zboží}
+Systém bude sledovat pohyb zboží. Evidence začíná vyskladněním ze skladu na sklad technikův. Ze skladu technika zboží putuje do skladu automatu. V okamžiku, kdy se zboží prodá, mění se na finanční hotovost.
+\subsection{Zobrazení nefunkčních automatů}
+Aplikace bude po přihlášení zobrazovat seznam automatů, kde se technikovi nepodařilo odstranit závadu.
+\subsection{Export do tabulek Excel}
 \subsection{Instalace}
+Serverová část bude 
 \section{Nefunkční požadavky}
 \subsection{Lokalizace}
 \subsection{Požadavky na výkon}
