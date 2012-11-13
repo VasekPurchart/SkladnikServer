@@ -107,7 +107,7 @@ Součástí projektu je následující dokumentace:
 Systém bude koncipován modulárně a v případě potřeby je možné přidat další funkčnost.
 
 \subsection{Negativní vymezení}
-Systém nebude hlídat, zda některý technik zboží krade. Bude pouze poskytovat pohled na data, která se nashromáždí při inventuře. Systém dále nebude hlídat fyzický stav zboží na skladě.
+Systém nebude hlídat, zda některý technik zboží krade. Bude pouze poskytovat pohled na data, která se nashromáždí při inventuře. Systém nebude řešit historii cen - pokud se cena změní ovlivní to údaje v historii.
 
 \section{Požadavky na uživatelské rozhraní}
 \subsection{Aplikace pro mobilní telefony}
@@ -167,6 +167,7 @@ Nabídka rozhraní pro skladníka umožňuje:
 	\item \textbf{Vydat zboží} - aplikace zobrazí seznam techniků, z kterého skladník vybere toho, kterému bude vyskladňovat zboží. Pak se zobrazí textové pole pro čárový kód zboží a textové pole pro počet kusů (zde bude přednastavená hodnota z databáze počet kusů v krabici), které ze skladu vydává. Vedle textového pole pro čárový kód bude tlačítko lupy, které poskytne dialog s textovým polem pro vyhledávání podle názvu. U seznamu zboží bude tlačítko pro přidání dalšího zboží.
 	\item \textbf{Osobní spotřeba} - uživatelské rozhraní bude stejné jako pro výdej zboží
 	\item \textbf{Příjem hotovosti a prošlého zboží} - aplikace zobrazí textové pole pro hodnotu hotovosti, kterou technik dovezl. Dále pak textové pole, pro čárový kód, tlačítko lupy pro vyhledávání jako při vydávání zboží a textové pole pro počet vracených položek.
+	\item \textbf{Příjem nového zboží} - aplikace zobrazí dvě textová pole. Jedno bude sloužit k počtu balení a druhé k počtu kusů výrobku v balení. Implicitní hodnota pro počet balení bude 1 a počet kusů v balení se automaticky předvyplní z databáze.
 \end{enumerate}
 
 \subsubsection{Rozhraní pro vedení}
@@ -183,8 +184,30 @@ Základní menu rozhraní pro vedení bude obsahovat položky:
 \subsection{Sledování zboží}
 Systém bude sledovat pohyb zboží. Evidence začíná vyskladněním ze skladu na sklad technikův. Ze skladu technika zboží putuje do skladu automatu. V okamžiku, kdy se zboží prodá, mění se na finanční hotovost.
 \subsection{Zobrazení nefunkčních automatů}
-Aplikace bude po přihlášení zobrazovat seznam automatů, kde se technikovi nepodařilo odstranit závadu.
+Aplikace bude po přihlášení zobrazovat seznam automatů, kde se technikovi nepodařilo odstranit závadu. Spolu s textovým popisem zobrazí aplikace fotografii pořízenou technikem.
+\subsection{Rozlišení kusového zboží a surovin}
+Systém bude poskytovat přehled o kusovém zboží (sušenky, láhve s pitím) a o surovinách (káva, mléko). Suroviny se v automatu dělí mezi více výrobků např. mléko se dává ke kávě, ale také například k čokoládě.
+
+Při inventuře se suroviny zváží. Podle počítadel se spočte kolik suroviny mělo ubýt a tento údaj se bude porovnávat s množstvím suroviny podle inventury.
+
+\subsection{Ziskovost automatu}
+najem - fixni / z porce / dotace (plati oni za to, ze stroj tam je = zaporny najem)
+elektrina
+cena stroje - prepocteno na mesic - stroj stal 100 000 a  musi se odepsat za 3 roky - tzn stoji 100 000 / 3 = 33 000 rocne ... Robert si tuhle castku ale zada
+
+zisk - naklady
+naklady = 
+
+Zbozi ve stroji
+recepty - vedeni si namicha recept - napr 1 bageta nebo 2g kava+1g  mliko+kelimek+michatko
+
+V automatech pak mame na pocitadlech receno, ze tam davame jednu skupinu zbozi - napr deli oriskova nebo deli cokoladova ... tvori jednu skupinu - maji stejnou cenu
+
+kontakty u automatu
+
+
 \subsection{Export do tabulek Excel}
+
 \subsection{Instalace}
 Serverová část bude 
 \section{Nefunkční požadavky}
