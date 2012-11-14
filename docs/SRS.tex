@@ -31,26 +31,32 @@
 Tento dokument slouží jako specifikace požadavků na aplikaci „Skladník“. Podrobně stanovuje rozsah projektu a funkční i nefunkční požadavky.
 
 \subsection{Úvod do problematiky}
-U nápojových a kusových automatů se stává, že se některé zboží ztratí. Důvodem může být buď, že automat někdo vykrade nebo že zboží odcizí samotný technik, který má automat na starost. Vedení společnosti nemá možnost zjistit, zda zboží krade technik, a proto je třeba zavést pravidelnou inventuru. Automaty mají počítadla prodaných kusů zboží, které se dají při inventuře využít. Každý technik se stará a svěřené automaty. Nemá k nim tedy přístup nikdo jiný než on.
+U nápojových a kusových automatů se stává, že se některé zboží ztratí. Důvodem může být buď, že automat někdo vykradl nebo že zboží odcizil samotný technik, který má automat na starost. Vedení společnosti nemá možnost zjistit, zda zboží krade technik, a proto je třeba zavést pravidelnou inventuru.
 
 Tento problém by měl řešit systém skladník, který poskytne kontrolu nad zbožím od skladu, přes technika a automat až po peníze za prodané zboží.
 
+Automaty mají počítadla prodaných kusů výrobku, které se dají při inventuře využít. Každý technik se stará a svěřené automaty. Nemá k nim tedy přístup nikdo jiný než on. Výjimku tvoří technici, kteří budou provádět inventuru automatů. Ten jede s technikem, kterému ten den dělá inventuru a zkontroluje stav zboží v automatu, zaznamená stavy počítadel a stav mincovníku.
+
+Zboží se rozděluje na dva druhy. První je kusové (např. čokoládová tyčinka, bageta apod.), kde se prodává vždy jeden kus. A druhý druh je zboží složené ze surovin, kde např. káva obsahuje určitý poměr kávy, vody, mléka apod. 
+
+U některého zboží se podává také kelímek (káva, čokoláda apod.). Na kelímek je u některých automatů možné nastavit slevu. Tato sleva se volí stiskem určitého tlačítka na automatu a má také své počítadlo. Cenu výrobku pak snižuje o předem nastavenou částku.
+
+Někdy se stává, že v automatu je vyprodáno určité zboží, ale technik jím už doplnil jiný automat. V takovém případě do spirály dá zboží jiné, ale stejné hodnoty. Např. pokud mu dojdou Tatranky oříškové, doplní chybějící zboží Tatrankami čokoládovými.
+
 \section{Celkový popis}
 \subsection{Popis systému}
-Systém bude umožňovat převod zboží ze skladu k technikovi. Technik pak se zbožím pojede k automatu, kde mu aplikace nabídne nejprve vybrat prošlé zboží a poté doplnění zboží. Tím dojde k převodu zboží od technika do automatu.
+Systém bude umožňovat převod zboží ze skladu k technikovi. Technik pak se zbožím pojede k automatu, kde mu aplikace nabídne nejprve vybrat prošlé zboží a poté doplnění zboží. Tím dojde k převodu zboží od technika do automatu resp. k převodu prošlého zboží k technikovi.
 
 V případě, že byl automat vykraden bude mít technik možnost tuto skutečnost mobilním telefonem vyfotografovat. Zároveň specifikuje kolik kusů jakého výrobku bylo odcizeno (lze poznat z prázdných přihrádek ve spirále). Takové zboží se nebude převádět zpět k technikovi, ale bude zaznamenáno ke danému automatu pod sekcí ZTRÁTY.
 
-Hotovost z mincovníku a prošlé zboží, které z automatu vybral odevzdá na sklad.
+Tržbu z automatu a prošlé zboží, které z automatu vybral odevzdá na sklad.
 
 Technik bude mít také možnost zaznamenat servisní zásah na automatu. Do servisního zásahu spadá:
 \begin{enumerate}
 	\item \textbf{Preventivní servis}
 	\item \textbf{Oprava automatu} - závadu zjistí technik a opraví
-	\item \textbf{Poškození automatu} - automat poškodil někdo cizí, technik
+	\item \textbf{Poškození automatu} - automat poškodil někdo cizí
 \end{enumerate}
-
-V den, kdy se má dělat inventura, pojedou technici dva. Jeden na doplňování zboží a druhý, aby zaznamenal údaje z počítadel a aktuální stav zboží v automatu.
 
 Součástí systému budou dvě aplikace. Jedna bude určena pro mobilní telefony a druhá bude určena pro PC. První aplikaci budou používat technici a druhou bude používat skladník a vedení společnosti. V systému budou uživatelé rozděleni do rolí. Vedení a skladník se do systému budou přihlašovat pomocí uživatelského jména a hesla. Technici do systému získají přístup spárováním identifikačního čísla telefonu se záznamem technika v databázi při obdržení telefonu.
 
@@ -60,12 +66,14 @@ Skladník bude mít také možnost vydat zboží některému z uživatelů pro t
 \begin{itemize}
   \item Přihlášení a odhlášení uživatelů
   \item Vytváření, editace, mazání uživatelů a nastavování jejich rolí
+  \item Zadávání, editace a odstraňování automatů
   \item Zadávání, editace a odstraňování výrobků
   \item Prohlížení záznamů o vykradení automatu
   \item Výstupy do aplikace Microsoft Excel
   \item Vydání zboží technikovi pomocí skenování čárového kódu
   \item Příjem hotovosti a prošlého zboží zpět do skladu
   \item Výdej zboží pro osobní spotřebu
+  \item Příjem zboží na sklad od dodavatele
 \end{itemize}
 
 \subsection{Základní popis funkcí aplikace pro mobilní telefony}
@@ -85,14 +93,13 @@ Skladník bude mít také možnost vydat zboží některému z uživatelů pro t
 \subsection{Běhové prostředí}
 Serverová část bude provozována na serveru Glassfish 3.1 s databází MySQL 5.x. Předpokládá se, že administrátor má plný přístup k systému, kde server poběží.
 
-Klientské aplikace se budou k serveru připojovat pomocí WebServices, je tedy třeba, aby byla funkční počítačová síť mezi jednotlivými stanicemi a firewall umožňoval připojení k těmto službám.
+Klientské aplikace se budou k serveru připojovat pomocí WebServices (SOAP), je tedy třeba, aby byla funkční počítačová síť mezi jednotlivými stanicemi a firewall umožňoval připojení k těmto službám.
 
 Aplikace pro PC bude provozována na systému Microsoft Windows verze XP, Vista, 7 a 8 s nainstalovaným Microsoft .NET Framework 4.0. Sekce pro skladníka by měla být přizpůsobena pro dotykovou obrazovku.
 
-Aplikace pro mobilní telefon bude provozována na telefonech s operačním systémem Android 4.x s možností pořizovat fotografie s rozlišením alespoň 5 Mpx.
+Aplikace pro mobilní telefon bude provozována na telefonech s operačním systémem Android 4.x s možností pořizovat fotografie s rozlišením alespoň 5 Mpx a možností připojení k sítím WiFi.
 
-Dodavatel nezaručuje korektní chování s jinými verzemi serverových aplikací a
-klientských systémů.
+Dodavatel nezaručuje korektní chování s jinými verzemi serverových aplikací a klientských systémů.
 
 \subsection{Dokumentace}
 Součástí projektu je následující dokumentace:
@@ -104,16 +111,20 @@ Součástí projektu je následující dokumentace:
 \end{itemize}
 
 \subsection{Předpokládaná další rozšíření}
-Systém bude koncipován modulárně a v případě potřeby je možné přidat další funkčnost.
+Systém bude koncipován modulárně, aby bylo možné v případě potřeby přidat novou funkcionalitu.
 
 \subsection{Negativní vymezení}
-Systém nebude hlídat, zda některý technik zboží krade. Bude pouze poskytovat pohled na data, která se nashromáždí při inventuře. Systém nebude řešit historii cen - pokud se cena změní ovlivní to údaje v historii.
+Systém nebude hlídat, zda některý technik zboží krade. Bude pouze poskytovat pohled na data, která se nashromáždí při inventuře. Systém nebude řešit historii cen - pokud se tedy cena změní, ovlivní to údaje v historii.
 
 \section{Požadavky na uživatelské rozhraní}
 \subsection{Aplikace pro mobilní telefony}
 Uživatelské rozhraní aplikace pro mobilní telefony bude uzpůsobeno ovládání dotykem podle Android Guidelines pro verzi Android 4.x~\cite{android_guidelines}. Uspořádání prvků uživatelského rozhraní bude přizpůsobeno pro rozlišení displeje 800x480 px.
 
-Na hlavní obrazovce bude menu, kde si uživatel vybere, zda chce ze svého skladu vzít zboží pro osobní spotřebu nebo zda se nachází u automatu. Pokud zvolí možnost, že se nachází u automatu, zařízení se zeptá, o který automat se jedná. Automat je identifikován číslem, které uživatel napíše na numerické klávesnici.
+Na hlavní obrazovce bude menu, kde si uživatel vybere, zda chce ze svého skladu vzít zboží pro osobní spotřebu nebo zda se nachází u automatu.
+
+V případě zboží pro osobní potřebu uživatel specifikuje zboží (vyhledáním podle názvu nebo naskenování čárového kódu) a počet kusů, které si bere.
+
+Pokud zvolí možnost, že se nachází u automatu, zařízení se zeptá, o který automat se jedná. Automat je identifikován číslem, které uživatel napíše na numerické klávesnici.
 
 Další obrazovka bude obsahovat akce spojené s automatem:
 
@@ -151,7 +162,7 @@ Při volbě automat vykraden bude uživatel vyzván k pořízení fotografie. V 
 Technikovi s přístupem do sekce Inventura se zobrazí menu s těmito možnostmi:
 \begin{enumerate}
 	\item \textbf{Stav zboží v automatu} - zobrazí se tlačítko pro zahájení skenování čárového kódu a textové pole pro manuální vyhledávání zboží podle názvu (aplikace bude zboží našeptávat podle skladu daného automatu), v dalším kroku do textového pole zadá, kolik kusů se v automatu nachází. V posledním kroku bude textové pole, kam se zadá jaká je prodejní cena tohoto zboží v daném automatu.
-	\item \textbf{Stav počítadel} - aplikace zobrazí seznam počítadel (1 až n podle nastaveni automatu) s hodnotami z poslední inventury. Při kliknutí na počítadlo se zobrazí textové pole pro aktualizaci hodnoty. Po aktualizaci hodnoty bude toto počítadlo graficky odlišeno od ostatních počitadel.
+	\item \textbf{Stav počítadel} - aplikace zobrazí seznam počítadel (1 až n podle nastavení automatu) s hodnotami z poslední inventury. Při kliknutí na počítadlo se zobrazí textové pole pro aktualizaci hodnoty. Po aktualizaci hodnoty bude toto počítadlo graficky odlišeno od ostatních počitadel.
 	\item \textbf{Stav mincovníku} - textové pole pro hodnotu mincí v mincovníku
 \end{enumerate}
 
@@ -164,9 +175,9 @@ Společná část je přihlašovací dialog, kde uživatel vyplní uživatelské
 \subsubsection{Rozhraní pro skladníka}
 Nabídka rozhraní pro skladníka umožňuje:
 \begin{enumerate}
-	\item \textbf{Vydat zboží} - aplikace zobrazí seznam techniků, z kterého skladník vybere toho, kterému bude vyskladňovat zboží. Pak se zobrazí textové pole pro čárový kód zboží a textové pole pro počet kusů (zde bude přednastavená hodnota z databáze počet kusů v krabici), které ze skladu vydává. Vedle textového pole pro čárový kód bude tlačítko lupy, které poskytne dialog s textovým polem pro vyhledávání podle názvu. U seznamu zboží bude tlačítko pro přidání dalšího zboží.
+	\item \textbf{Vydat zboží} - aplikace zobrazí seznam techniků, z kterého skladník vybere toho, kterému bude vyskladňovat zboží. Pak se zobrazí textové pole pro čárový kód zboží a textové pole pro počet kusů, které ze skladu vydává (zde bude přednastavená hodnota z databáze počet kusů v krabici). Vedle textového pole pro čárový kód bude tlačítko lupy, které poskytne dialog s textovým polem pro vyhledávání podle názvu. U seznamu zboží bude tlačítko pro přidání dalšího zboží.
 	\item \textbf{Osobní spotřeba} - uživatelské rozhraní bude stejné jako pro výdej zboží
-	\item \textbf{Příjem hotovosti a prošlého zboží} - aplikace zobrazí textové pole pro hodnotu hotovosti, kterou technik dovezl. Dále pak textové pole, pro čárový kód, tlačítko lupy pro vyhledávání jako při vydávání zboží a textové pole pro počet vracených položek.
+	\item \textbf{Příjem hotovosti a prošlého zboží} - aplikace zobrazí textové pole pro hodnotu hotovosti, kterou technik přivezl. Dále pak textové pole, pro čárový kód, tlačítko lupy pro vyhledávání jako při vydávání zboží a textové pole pro počet vracených položek.
 	\item \textbf{Příjem nového zboží} - aplikace zobrazí dvě textová pole. Jedno bude sloužit k počtu balení a druhé k počtu kusů výrobku v balení. Implicitní hodnota pro počet balení bude 1 a počet kusů v balení se automaticky předvyplní z databáze.
 \end{enumerate}
 
@@ -174,50 +185,62 @@ Nabídka rozhraní pro skladníka umožňuje:
 Základní menu rozhraní pro vedení bude obsahovat položky:
 \begin{enumerate}
 	\item \textbf{Správa uživatelů} - zobrazí seznam uživatelů a tlačítko pro přidání nového uživatele. Po vybrání uživatele ze seznamu se zobrazí okno s textovým polem pro uživatelské jméno, textovým polem pro heslo a seznamem pro výběr role. Pokud bude role nastavena na technika nebo technika s inventurou, bude možné ze seznamu volných automatů přiřadit ty, které má mít na starost. Dále se zobrazí seznam položek, které má technik naskladněné.
-	\item \textbf{Správa automatů} - zobrazí se seznam všech automatů a tlačítko pro zavedení nového automatu. Po vybrání automatu ze seznamu se zobrazí textové pole pro název automatu, pole pro výběr technika, který automat spravuje, seznam číselníků s jejich hodnotami podle poslední inventury a  zbožím, které se na daném číselníku prodává spolu s jeho prodejní cenou v daném automatu.
+	\item \textbf{Správa automatů} - bude popsána podrobněji dále
 	\item \textbf{Správa zboží} - zobrazí seznam veškerého zboží v databázi a tlačítko pro zavedení nového zboží. Po vybrání ze seznamu se zobrazí textové pole pro název zboží, textové pole pro čárový kód a textové pole pro počet kusů v jedné krabici.
-	\item \textbf{Výstupy} TODO
+	\item \textbf{Výstupy} - výstup bude do tabulky Excel. Uživatel zaškrtne automaty, které chce ve výstupu mít, určí ke které inventuře chce výstup vidět a stiskne tlačítko Export. V tabulce pak bude každý automat na samostatném listu. 
+	
+	U každého automatu bude:
+	\begin{enumerate}
+		\item tabulka se seznamem počítadel, názvem zboží, cena za prodaný kus, stav počítadla při předchozí inventuře a stav počítadla při vybrané inventuře, rozdíl mezi inventurami a vypočtená tržba.
+		\item tabulka se seznamem zboží (surovin), stavy zboží při předchozí inventuře, jednotlivými doplněními automatu včetně kolik a co technik doplňoval a součet údajů z minulé inventury a toho, co technik mezi inventurami doplnil. Nakonec stavy zboží při vybrané inventuře.
+	\end{enumerate}
 \end{enumerate}
 
+\subsubsection*{Správa automatů}
+Volba Správa automatů zobrazí se seznam všech automatů a tlačítko pro zavedení nového automatu. Po vybrání automatu ze seznamu se zobrazí:
+\begin{itemize}
+	\item textové pole pro název automatu
+	\item pole pro výběr technika, který automat spravuje
+	\item tabulka číselníků s jejich hodnotami podle poslední inventury, receptem, který automat prodává a jeho prodejní cenou. U receptu bude tlačítko "Namíchat recept".
+	Kliknutím na tlačítko namíchat recept se objeví dialog, kde je možné přidávat jednotlivé suroviny (zboží) a přiřazovat jim počet. Např. čokoládový nápoj je složen ze surovin: 5 g čokoláda, 1 g mléko a kelímek. Kusové zboží bude mít typicky pouze jednu položku.
+	\item náklady na automat - seznam, kde bude možné si zadat libovolný počet položek pro každý automat spolu s výší nákladu (nájem, elektřina). Bude možné zadat také záporné číslo - tzn. pokud zákazník platí za to, že tam automat je. Bude zde také zaškrtávací tlačítko, zda je částka závislá na počtu prodaných kusů.
+	\item ziskovost automatu - na základě nákladů na automat a tržby z automatu
+	\item kontakty automatu - seznam, kde si může uživatel zadat kontakty k automatu
+\end{itemize}
 
 \section{Funkce aplikace}
+\subsection{Synchronizace aplikace pro mobilní telefony}
+Aplikace pro mobilní telefony bude pracovat offline. Když se technik dostane do dosahu sítě WiFi, může data sesynchronizovat. Zároveň musí data sesynchronizovat po vydání nového zboží ze skladu, aby se mu zboží nahrálo do zařízení.
 \subsection{Sledování zboží}
 Systém bude sledovat pohyb zboží. Evidence začíná vyskladněním ze skladu na sklad technikův. Ze skladu technika zboží putuje do skladu automatu. V okamžiku, kdy se zboží prodá, mění se na finanční hotovost.
 \subsection{Zobrazení nefunkčních automatů}
 Aplikace bude po přihlášení zobrazovat seznam automatů, kde se technikovi nepodařilo odstranit závadu. Spolu s textovým popisem zobrazí aplikace fotografii pořízenou technikem.
-\subsection{Rozlišení kusového zboží a surovin}
-Systém bude poskytovat přehled o kusovém zboží (sušenky, láhve s pitím) a o surovinách (káva, mléko). Suroviny se v automatu dělí mezi více výrobků např. mléko se dává ke kávě, ale také například k čokoládě.
+\subsection{Zpracování kusového zboží a surovin}
+Je třeba se stavět odlišně ke kusovému zboží (sušenky, láhve s pitím) a k surovinám (káva, mléko). Suroviny se v automatu dělí mezi více výrobků např. mléko se dává ke kávě, ale také například k čokoládě.
 
-Při inventuře se suroviny zváží. Podle počítadel se spočte kolik suroviny mělo ubýt a tento údaj se bude porovnávat s množstvím suroviny podle inventury.
+Aby se dala spotřeba surovin počítat přes více počítadel, používají se tzv. recepty. Recept se skládá ze zboží (ať už surovina nebo kusové zboží, v systému se to nerozlišuje). Počítadla pak počítají v podstatě prodané recepty - tím pádem více zboží v rámci jedné položky.
 
-\subsection{Ziskovost automatu}
-najem - fixni / z porce / dotace (plati oni za to, ze stroj tam je = zaporny najem)
-elektrina
-cena stroje - prepocteno na mesic - stroj stal 100 000 a  musi se odepsat za 3 roky - tzn stoji 100 000 / 3 = 33 000 rocne ... Robert si tuhle castku ale zada
-
-zisk - naklady
-naklady = 
-
-Zbozi ve stroji
-recepty - vedeni si namicha recept - napr 1 bageta nebo 2g kava+1g  mliko+kelimek+michatko
-
-V automatech pak mame na pocitadlech receno, ze tam davame jednu skupinu zbozi - napr deli oriskova nebo deli cokoladova ... tvori jednu skupinu - maji stejnou cenu
-
-kontakty u automatu
-
-
-\subsection{Export do tabulek Excel}
+Díky tomu je možné měnit nejen recepturu nápojů, ale například zavádět speciální akce i na kusové zboží - např. sušenka a žvýkačky jako jeden prodejní kus.
 
 \subsection{Instalace}
-Serverová část bude 
+Serverová část bude instalována nahráním .war souboru do aplikačního serveru a nastavením připojení k databázi v rámci aplikačního serveru.
+
+Aplikace pro systém Android se nakopíruje do telefonu a spustí. Tím dojde k instalaci. Dále je třeba v nastavení aplikace specifikovat IP adresu serveru a v serverové aplikaci přiřadit ID telefonu ke konkretnímu uživateli.
+
+Aplikace pro PC bude distribuována jako instalační balík, který stačí nainstalovat. Během instalace si instalační balík ověří, zda je nainstalovaný .NET Framework 4.0 a případně vyzve uživatele k jeho stažení.
 \section{Nefunkční požadavky}
 \subsection{Lokalizace}
+Aplikační rozhraní bude v českém. Pro reprezentaci všech textových dat bude použita znaková sada UTF-8.
+
 \subsection{Požadavky na výkon}
+Server s běžným 2 GHz procesorem, 2 GB RAM a 7200 otáčkovým SATA diskem musí zvládat 5 techniků synchronizujících data najednou.
 \subsection{Bezpečnostní opatření}
+Aplikace budou komunikovat pomocí WebServices přes zabezpečený HTTPS protokol. Certifikát bude vygenerován a podepsán vlastní certifikační autoritou. Kontrola certifikátu bude zabudovaná přímo v aplikacích.
+
+Hesla budou uložena v databázi v podobě hash generovaného algoritmem SHA1 se statickou solí a solí v podobě uživatelského jména.
 \subsection{Licenční ujednání}
 \begin{thebibliography}{1}
 \bibitem{android_guidelines}
-	{\em Android User Interface Guidelines}
-		\url{http://developer.android.com/guide/practices/ui_guidelines/index.html}
+	{\em Android User Interface Guidelines}	\url{http://developer.android.com/guide/practices/ui_guidelines/index.html}
 \end{thebibliography}
 \end{document}          
