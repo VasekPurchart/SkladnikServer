@@ -91,7 +91,7 @@ Skladník bude mít také možnost vydat zboží některému z uživatelů pro t
 \end{itemize}
 
 \subsection{Běhové prostředí}
-Serverová část bude provozována na serveru Glassfish 3.1 s databází MySQL 5.x. Předpokládá se, že administrátor má plný přístup k systému, kde server poběží.
+Serverová část bude provozována na serveru Glassfish 3.1 s databází MySQL 5.x. Pro přístup do databáze je třeba uživatel s právy zápisu a čtení na databázovém serveru.
 
 Klientské aplikace se budou k serveru připojovat pomocí WebServices (SOAP), je tedy třeba, aby byla funkční počítačová síť mezi jednotlivými stanicemi a firewall umožňoval připojení k těmto službám.
 
@@ -233,7 +233,11 @@ Aplikace pro PC bude distribuována jako instalační balík, který stačí nai
 Aplikační rozhraní bude v českém. Pro reprezentaci všech textových dat bude použita znaková sada UTF-8.
 
 \subsection{Požadavky na výkon}
-Server s běžným 2 GHz procesorem, 2 GB RAM a 7200 otáčkovým SATA diskem musí zvládat 5 techniků synchronizujících data najednou.
+Server s běžným 2 GHz procesorem, 2 GB RAM a 7200 otáčkovým SATA diskem musí zvládat 5 techniků synchronizujících data najednou. Předpokladem pro uvedenou výkonnost je vytížení serveru pouze systémem Skladník.
+
+\subsection{Dostupnost}
+Dostupnost je závislá na přístupu k aplikačnímu a potažmo databázovému serveru. Nutná je také funkční a správně nakonfigurovaná WiFi sít a dobrý signál.
+
 \subsection{Bezpečnostní opatření}
 Aplikace budou komunikovat pomocí WebServices přes zabezpečený HTTPS protokol. Certifikát bude vygenerován a podepsán vlastní certifikační autoritou. Kontrola certifikátu bude zabudovaná přímo v aplikacích.
 
