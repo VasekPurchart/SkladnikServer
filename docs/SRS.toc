@@ -12,21 +12,20 @@
 \contentsline {subsection}{\numberline {2.7}Negativn\IeC {\'\i } vymezen\IeC {\'\i }}{5}{subsection.2.7}
 \contentsline {section}{\numberline {3}Po\IeC {\v z}adavky na u\IeC {\v z}ivatelsk\IeC {\'e} rozhran\IeC {\'\i }}{5}{section.3}
 \contentsline {subsection}{\numberline {3.1}Aplikace pro mobiln\IeC {\'\i } telefony}{5}{subsection.3.1}
-\contentsline {subsubsection}{\numberline {3.1.1}Servis}{5}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Servis}{6}{subsubsection.3.1.1}
 \contentsline {subsubsection}{\numberline {3.1.2}Dopln\IeC {\v e}n\IeC {\'\i } automatu}{6}{subsubsection.3.1.2}
-\contentsline {subsubsection}{\numberline {3.1.3}Inventura}{6}{subsubsection.3.1.3}
+\contentsline {subsubsection}{\numberline {3.1.3}Inventura}{7}{subsubsection.3.1.3}
 \contentsline {subsection}{\numberline {3.2}Aplikace pro PC}{7}{subsection.3.2}
 \contentsline {subsubsection}{\numberline {3.2.1}Rozhran\IeC {\'\i } pro skladn\IeC {\'\i }ka}{7}{subsubsection.3.2.1}
-\contentsline {subsubsection}{\numberline {3.2.2}Rozhran\IeC {\'\i } pro veden\IeC {\'\i }}{7}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.2}Rozhran\IeC {\'\i } pro veden\IeC {\'\i }}{8}{subsubsection.3.2.2}
 \contentsline {section}{\numberline {4}Funkce aplikace}{9}{section.4}
 \contentsline {subsection}{\numberline {4.1}Synchronizace aplikace pro mobiln\IeC {\'\i } telefony}{9}{subsection.4.1}
 \contentsline {subsection}{\numberline {4.2}Sledov\IeC {\'a}n\IeC {\'\i } zbo\IeC {\v z}\IeC {\'\i }}{9}{subsection.4.2}
 \contentsline {subsection}{\numberline {4.3}Zobrazen\IeC {\'\i } nefunk\IeC {\v c}n\IeC {\'\i }ch automat\IeC {\r u}}{9}{subsection.4.3}
 \contentsline {subsection}{\numberline {4.4}Zpracov\IeC {\'a}n\IeC {\'\i } kusov\IeC {\'e}ho zbo\IeC {\v z}\IeC {\'\i } a surovin}{9}{subsection.4.4}
-\contentsline {subsection}{\numberline {4.5}Instalace}{9}{subsection.4.5}
+\contentsline {subsection}{\numberline {4.5}Instalace}{10}{subsection.4.5}
 \contentsline {section}{\numberline {5}Nefunk\IeC {\v c}n\IeC {\'\i } po\IeC {\v z}adavky}{10}{section.5}
 \contentsline {subsection}{\numberline {5.1}Lokalizace}{10}{subsection.5.1}
 \contentsline {subsection}{\numberline {5.2}Po\IeC {\v z}adavky na v\IeC {\'y}kon}{10}{subsection.5.2}
 \contentsline {subsection}{\numberline {5.3}Dostupnost}{10}{subsection.5.3}
-\contentsline {subsection}{\numberline {5.4}Bezpe\IeC {\v c}nostn\IeC {\'\i } opat\IeC {\v r}en\IeC {\'\i }}{10}{subsection.5.4}
-\contentsline {subsection}{\numberline {5.5}Licen\IeC {\v c}n\IeC {\'\i } ujedn\IeC {\'a}n\IeC {\'\i }}{10}{subsection.5.5}
+\contentsline {subsection}{\numberline {5.4}Bezpe\IeC {\v c}nostn\IeC {\'\i } opat\IeC {\v r}en\IeC {\'\i }}{11}{subsection.5.4}
