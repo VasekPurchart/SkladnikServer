@@ -1,17 +1,24 @@
 package cz.cvut.jboss.storagecycle.Api;
 
-import static org.junit.Assert.assertEquals;
+import cz.cvut.jboss.storagecycle.Person.Person;
+import cz.cvut.jboss.storagecycle.Product.ProductStock;
+import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.VendingMachine.Audit;
+import cz.cvut.jboss.storagecycle.VendingMachine.AuditLog;
+import cz.cvut.jboss.storagecycle.VendingMachine.Recipe;
+import cz.cvut.jboss.storagecycle.VendingMachine.ServiceVisit;
+import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
+import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
+import java.io.File;
 import javax.inject.Inject;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import cz.cvut.jboss.storagecycle.Api.LocalFacade;
 
 @RunWith(Arquillian.class)
 public class LocalFacadeTest {
@@ -22,13 +29,24 @@ public class LocalFacadeTest {
     @Deployment
     public static Archive<?> getDeployment() {
     	return ShrinkWrap.create(WebArchive.class, "test.war")
-    			.addPackage(LocalFacade.class.getPackage())
-    			.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
-                //.addAsWebResource(EmptyAsset.INSTANCE, "beans.xml");
+    			.addClasses(
+					LocalFacade.class,
+					Person.class,
+					ProductStock.class,
+					ProductType.class,
+					Audit.class,
+					AuditLog.class,
+					Recipe.class,
+					ServiceVisit.class,
+					VendingMachine.class,
+					Warehouse.class
+				)
+    			.addAsResource(new File("src/main/resources/META-INF/persistence.xml"), "META-INF/persistence.xml")
+				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"), "beans.xml");
     }
 
     @Test
     public void testSerialFactorial() {
-        assertEquals(true, true);
+        assertEquals(null, facade.findPerson(1L));
     }
 }

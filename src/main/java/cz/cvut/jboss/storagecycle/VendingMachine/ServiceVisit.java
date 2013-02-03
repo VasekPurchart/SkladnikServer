@@ -27,14 +27,13 @@ public class ServiceVisit implements Serializable {
    private Long id;
 
    @NotNull
-   @Min(1)
    private Date timestamp;
 
    @NotNull
    @Min(0)
    private int withDrawnCash;
-   
+
    @OneToMany(cascade={CascadeType.PERSIST})
    private List<ProductStock> items = new ArrayList<ProductStock>();
-   
+
 }
