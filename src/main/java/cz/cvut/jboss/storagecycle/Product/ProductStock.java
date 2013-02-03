@@ -20,12 +20,32 @@ public class ProductStock implements Serializable {
    @Id
    @GeneratedValue
    private Long id;
-   
+
    @ManyToOne(cascade={CascadeType.PERSIST})
    private ProductType productType;
 
    @NotNull
    @Min(1)
    private int count;
-   
+
+   public ProductType getProductType() {
+	   return productType;
+   }
+
+   public void setProductType(ProductType type) {
+	   this.productType = type;
+   }
+
+   public int getCount() {
+	   return count;
+   }
+
+   public void incrementCount(int by) {
+	   count += by;
+   }
+
+   public void decrementCount(int by) {
+	   count -= by;
+   }
+
 }

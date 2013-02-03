@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
+import cz.cvut.jboss.storagecycle.Product.ProductType;
+import javax.persistence.FetchType;
 
 @Entity
 @XmlRootElement
@@ -22,8 +24,30 @@ public class Warehouse implements Serializable {
    @Id
    @GeneratedValue
    private Long id;
-   
-   @OneToMany(cascade={CascadeType.PERSIST})
+
+   @OneToMany(cascade={CascadeType.PERSIST}, fetch=FetchType.EAGER)
    private List<ProductStock> items = new ArrayList<ProductStock>();
-   
+
+   public ProductStock getStockOfType(ProductType type) {
+	   for (ProductStock stock : items) {
+		   if (stock.getProductType().getName().contains(type.getName())) {
+			   return stock;
+		   }
+	   }
+
+	   return null;
+   }
+
+   public void addStock(ProductStock stock) {
+	   if (getStockOfType(stock.getProductType()) != null) {
+		   throw new IllegalArgumentException("Warehouse already contains stock of type " + stock.getProductType().getName());
+	   }
+
+	   items.add(stock);
+   }
+
+   public List<ProductStock> getItems() {
+	   return items;
+   }
+
 }

@@ -1,5 +1,6 @@
 package cz.cvut.jboss.storagecycle.Api;
 
+import cz.cvut.jboss.storagecycle.EntityManagerProducer;
 import cz.cvut.jboss.storagecycle.Person.Person;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
@@ -11,6 +12,7 @@ import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
 import java.io.File;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -24,6 +26,9 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class LocalFacadeTest {
 
+	@Inject
+	private EntityManager em;
+
     @Inject
     private LocalFacade facade;
 
@@ -31,6 +36,7 @@ public class LocalFacadeTest {
     public static Archive<?> getDeployment() {
     	return ShrinkWrap.create(WebArchive.class, "test.war")
     			.addClasses(
+					EntityManagerProducer.class,
 					LocalFacade.class,
 					Person.class,
 					ProductStock.class,
@@ -51,4 +57,18 @@ public class LocalFacadeTest {
     public void testGetWarehouse() {
 		assertTrue(facade.getWarehouse() instanceof Warehouse);
     }
+
+	@Test
+	public void testImportToWarehouse() {
+		em.getTransaction().begin();
+		ProductType type = new ProductType();
+		type.setName("CocaCola");
+		em.persist(type);
+
+		facade.importToWarehouse(type, 20);
+		facade.importToWarehouse(type, 20);
+		em.getTransaction().commit();
+
+		assertEquals(40, facade.getWarehouse().getStockOfType(type).getCount());
+	}
 }

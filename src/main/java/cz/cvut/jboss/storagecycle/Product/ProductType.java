@@ -31,5 +31,13 @@ public class ProductType implements Serializable {
    @Size(min = 1, max = 25)
    @Pattern(regexp = "[A-Za-z0-9 ]*")
    private String name;
-   
+
+   public String getName() {
+	   return name;
+   }
+
+   public void setName(String name) {
+	   this.name = name;
+   }
+
 }
