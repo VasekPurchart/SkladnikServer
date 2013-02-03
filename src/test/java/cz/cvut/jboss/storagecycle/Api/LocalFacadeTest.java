@@ -17,6 +17,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,11 +43,12 @@ public class LocalFacadeTest {
 					Warehouse.class
 				)
     			.addAsResource(new File("src/main/resources/META-INF/persistence.xml"), "META-INF/persistence.xml")
+				.addAsResource(new File("src/main/resources/import.sql"), "import.sql")
 				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"), "beans.xml");
     }
 
     @Test
-    public void testSerialFactorial() {
-        assertEquals(null, facade.findPerson(1L));
+    public void testGetWarehouse() {
+		assertTrue(facade.getWarehouse() instanceof Warehouse);
     }
 }
