@@ -3,6 +3,7 @@ package cz.cvut.jboss.storagecycle.Api;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.VendingMachine.ServiceVisit;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
 import java.util.Collection;
@@ -62,7 +63,16 @@ public class LocalFacade {
 	}
 
 	public void visitVendingMachine(Technician technician, VendingMachine vendingMachine, Date date, Collection<ProductStock> items) {
+		ServiceVisit visit = new ServiceVisit();
+		visit.visit(vendingMachine, technician, date);
+		em.persist(visit);
 
+		for (ProductStock stock : items) {
+			technician.removeStock(stock);
+			vendingMachine.addStock(stock);
+		}
+
+		em.flush();
 	}
 
 }

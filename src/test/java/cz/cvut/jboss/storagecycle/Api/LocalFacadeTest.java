@@ -12,6 +12,9 @@ import cz.cvut.jboss.storagecycle.VendingMachine.ServiceVisit;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -22,6 +25,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -126,5 +130,29 @@ public class LocalFacadeTest {
 
 		assertEquals(10, facade.getWarehouse().getStockOfType(type).getCount());
 		assertEquals(10, technician.getStockOfType(type).getCount());
+	}
+
+	@Test
+	public void testVisitVendingMachine() {
+		ProductType type = new ProductType();
+		type.setName("Foo Bar");
+		em.persist(type);
+
+		Technician technician = em.find(Technician.class, 1L);
+		ProductStock stock = new ProductStock();
+		stock.setProductType(type);
+		stock.incrementCount(10);
+		em.persist(stock);
+		technician.addStock(stock);
+
+		VendingMachine machine = em.find(VendingMachine.class, 1L);
+		Date date = new Date(2013, 1, 4);
+
+		Collection<ProductStock> items = new ArrayList<ProductStock>();
+		items.add(stock);
+		facade.visitVendingMachine(technician, machine, date, items);
+
+		assertNull(technician.getStockOfType(type));
+		assertEquals(10, machine.getStockOfType(type).getCount());
 	}
 }

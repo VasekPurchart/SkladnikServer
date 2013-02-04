@@ -5,3 +5,5 @@ INSERT INTO `Technician` (`id`) VALUES (1);
 -- Warehouse
 INSERT INTO `Warehouse` (`id`) VALUES ('1');
 
+-- VendingMachine
+INSERT INTO `VendingMachine` (`id`, `adress`, `number`) VALUES (1, 'Vodičkova 12', 1);

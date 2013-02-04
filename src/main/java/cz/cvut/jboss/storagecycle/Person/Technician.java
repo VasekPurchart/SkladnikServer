@@ -33,6 +33,10 @@ public class Technician extends Person {
 		items.add(stock);
 	}
 
+	public void removeStock(ProductStock stock) {
+		items.remove(getStockOfType(stock.getProductType()));
+	}
+
 	public List<ProductStock> getItems() {
 		return items;
 	}
