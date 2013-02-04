@@ -151,8 +151,19 @@ public class LocalFacadeTest {
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
 		facade.visitVendingMachine(technician, machine, date, items);
+		em.getTransaction().commit();
 
 		assertNull(technician.getStockOfType(type));
 		assertEquals(10, machine.getStockOfType(type).getCount());
+	}
+
+	@Test
+	public void testSetCashWithdrawnForVisit() {
+		ServiceVisit visit = new ServiceVisit();
+		visit.visit(em.find(VendingMachine.class, 1L), em.find(Technician.class, 1L), new Date(2013, 2, 3));
+		em.persist(visit);
+		facade.setCashWithdrawnForVisit(visit, 100);
+		em.getTransaction().commit();
+		assertEquals(100, visit.getWithdrawnCash());
 	}
 }

@@ -59,6 +59,10 @@ public class ServiceVisit implements Serializable {
 		return withdrawnCash;
 	}
 
+	public void setWithdrawnCash(int cash) {
+		this.withdrawnCash = cash;
+	}
+
 	public void visit(VendingMachine vendingMachine, Technician technician, Date dateTime) {
 		this.vendingMachine = vendingMachine;
 		this.technician = technician;

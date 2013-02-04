@@ -75,4 +75,9 @@ public class LocalFacade {
 		em.flush();
 	}
 
+	public void setCashWithdrawnForVisit(ServiceVisit visit, int cash) {
+		visit.setWithdrawnCash(cash);
+		em.flush();
+	}
+
 }
