@@ -34,7 +34,7 @@ public class ServiceVisit implements Serializable {
 	private Long id;
 
 	@NotNull
-	@Temporal(javax.persistence.TemporalType.TIME)
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date dateTime;
 
 	@NotNull
