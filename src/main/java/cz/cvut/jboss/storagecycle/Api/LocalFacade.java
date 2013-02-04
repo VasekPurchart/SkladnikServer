@@ -11,6 +11,7 @@ import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -98,6 +99,31 @@ public class LocalFacade {
 		}
 
 		return audit;
+	}
+
+	public AuditReport exportAudits(Audit auditTo) {
+		Audit auditFrom = (Audit) em.createQuery(
+			"SELECT e FROM Audit e WHERE e.dateTime <= :datetime AND e.id != :id AND e.vendingMachine = :vendingMachine ORDER BY e.dateTime DESC"
+		).setParameter("id", auditTo.getId())
+		.setParameter("datetime", auditTo.getDateTime())
+		.setParameter("vendingMachine", auditTo.getVendingMachine())
+		.setMaxResults(1)
+		.getSingleResult();
+
+		Date to = auditTo.getDateTime();
+
+		Date from = new Date(70, 1, 1);
+		if (auditFrom != null) {
+			from = auditFrom.getDateTime();
+		}
+
+		List<ServiceVisit> visits = em.createQuery("SELECT e FROM ServiceVisit e WHERE e.vendingMachine = :vendingMachine AND e.dateTime >= :from AND e.dateTime <= to")
+		.setParameter("vendingMachine", auditTo.getVendingMachine())
+		.setParameter("from", from)
+		.setParameter("to", to)
+		.getResultList();
+
+		return new AuditReport(visits, auditFrom, auditTo);
 	}
 
 }

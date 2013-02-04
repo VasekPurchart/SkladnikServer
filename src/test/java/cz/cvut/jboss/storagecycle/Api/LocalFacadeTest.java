@@ -213,4 +213,33 @@ public class LocalFacadeTest {
 		assertSame(auditor, audit.getAuditor());
 		assertSame(log, audit.getRecipeLogs().get(0));
 	}
+
+	private Audit createAudit(VendingMachine machine) {
+		Auditor auditor = em.find(Auditor.class, 2L);
+		Collection<AuditLog> logs = new ArrayList<AuditLog>();
+		Date date = new Date();
+
+		final ProductType type = new ProductType();
+		type.setName("Mirinda");
+		em.persist(type);
+
+		List<ProductType> types = new ArrayList<ProductType>() {{
+			add(type);
+		}};
+		Recipe recipe = new Recipe(types, 20);
+
+		AuditLog log = new AuditLog(5, recipe);
+		logs.add(log);
+		return facade.sendAudit(auditor, machine, logs, date);
+	}
+
+	@Test
+	public void testExportAudits() {
+		VendingMachine machine = new VendingMachine();
+		machine.setAddress("Jihlavská 9");
+		machine.setNumber(230);
+		em.persist(machine);
+		Audit audit = createAudit(machine);
+
+	}
 }

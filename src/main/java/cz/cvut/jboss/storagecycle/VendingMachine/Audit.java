@@ -54,6 +54,10 @@ public class Audit implements Serializable {
 		return audit;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 	public void addRecipeLog(AuditLog log) {
 		recipeLogs.add(log);
 	}
