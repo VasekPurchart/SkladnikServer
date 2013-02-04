@@ -1,8 +1,11 @@
 package cz.cvut.jboss.storagecycle.Api;
 
+import cz.cvut.jboss.storagecycle.Person.Auditor;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.VendingMachine.Audit;
+import cz.cvut.jboss.storagecycle.VendingMachine.AuditLog;
 import cz.cvut.jboss.storagecycle.VendingMachine.ServiceVisit;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
@@ -58,17 +61,19 @@ public class LocalFacade {
 		em.flush();
 	}
 
-	public void visitVendingMachine(Technician technician, VendingMachine vendingMachine, Date date, Collection<ProductStock> items) {
+	public ServiceVisit visitVendingMachine(Technician technician, VendingMachine vendingMachine, Date date, Collection<ProductStock> items) {
 		ServiceVisit visit = new ServiceVisit();
 		visit.visit(vendingMachine, technician, date);
 		em.persist(visit);
 
 		for (ProductStock stock : items) {
 			technician.removeStock(stock);
-			vendingMachine.addStock(stock);
+			visit.addStock(stock);
 		}
 
 		em.flush();
+
+		return visit;
 	}
 
 	public void setCashWithdrawnForVisit(ServiceVisit visit, int cash) {
@@ -81,6 +86,18 @@ public class LocalFacade {
 		Collection<VendingMachine> vendingMachines = em.createQuery("SELECT e FROM VendingMachine e").getResultList();
 
 		return new TechnicianUpdateData(items, vendingMachines);
+	}
+
+	public Audit sendAudit(Auditor auditor, VendingMachine machine, Collection<AuditLog> logs, Date date) {
+		Audit audit = Audit.create(auditor, machine, date);
+		em.persist(audit);
+
+		for (AuditLog log : logs) {
+			em.persist(log);
+			audit.addRecipeLog(log);
+		}
+
+		return audit;
 	}
 
 }

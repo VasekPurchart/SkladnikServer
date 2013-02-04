@@ -40,31 +40,6 @@ public class VendingMachine implements Serializable {
 	@OneToMany(cascade = {CascadeType.PERSIST})
 	private List<Recipe> recipes = new ArrayList<Recipe>();
 
-	@OneToMany(cascade = {CascadeType.PERSIST})
-	private List<ProductStock> items = new ArrayList<ProductStock>();
-
 	@OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "vendingMachine")
 	private List<Audit> audits = new ArrayList<Audit>();
-
-	public ProductStock getStockOfType(ProductType type) {
-		for (ProductStock stock : items) {
-			if (stock.getProductType().getName().contains(type.getName())) {
-				return stock;
-			}
-		}
-
-		return null;
-	}
-
-	public void addStock(ProductStock stock) {
-		if (getStockOfType(stock.getProductType()) != null) {
-			throw new IllegalArgumentException("Vending machine already has stock of type " + stock.getProductType().getName());
-		}
-
-		items.add(stock);
-	}
-
-	public List<ProductStock> getItems() {
-		return items;
-	}
 }

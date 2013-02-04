@@ -31,5 +31,10 @@ public class Recipe implements Serializable {
    @NotNull
    @Min(0)
    private int price;
-   
+
+   public Recipe(List<ProductType> productTypes, int price) {
+	   this.productTypes = productTypes;
+	   this.price = price;
+   }
+
 }

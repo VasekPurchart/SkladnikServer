@@ -24,8 +24,21 @@ public class AuditLog implements Serializable {
    @NotNull
    @Min(0)
    private int pushCounterState;
-   
+
    @ManyToOne(cascade={CascadeType.PERSIST})
    private Recipe recipe;
-   
+
+   public AuditLog(int pushCounterState, Recipe recipe) {
+	   this.pushCounterState = pushCounterState;
+	   this.recipe = recipe;
+   }
+
+   public int getPushCounterState() {
+	   return pushCounterState;
+   }
+
+   public Recipe getRecipe() {
+	   return recipe;
+   }
+
 }

@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
+import cz.cvut.jboss.storagecycle.Product.ProductType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
@@ -67,6 +68,32 @@ public class ServiceVisit implements Serializable {
 		this.vendingMachine = vendingMachine;
 		this.technician = technician;
 		this.dateTime = dateTime;
+	}
+
+	public ProductStock getStockOfType(ProductType type) {
+		for (ProductStock stock : items) {
+			if (stock.getProductType().getName().contains(type.getName())) {
+				return stock;
+			}
+		}
+
+		return null;
+	}
+
+	public void addStock(ProductStock stock) {
+		if (getStockOfType(stock.getProductType()) != null) {
+			throw new IllegalArgumentException("Person already has stock of type " + stock.getProductType().getName());
+		}
+
+		items.add(stock);
+	}
+
+	public void removeStock(ProductStock stock) {
+		items.remove(getStockOfType(stock.getProductType()));
+	}
+
+	public List<ProductStock> getItems() {
+		return items;
 	}
 
 }

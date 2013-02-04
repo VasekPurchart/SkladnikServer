@@ -1,6 +1,7 @@
 package cz.cvut.jboss.storagecycle.Api;
 
 import cz.cvut.jboss.storagecycle.EntityManagerProducer;
+import cz.cvut.jboss.storagecycle.Person.Auditor;
 import cz.cvut.jboss.storagecycle.Person.Person;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -24,8 +26,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +55,7 @@ public class LocalFacadeTest {
 					ProductType.class,
 					Audit.class,
 					AuditLog.class,
+					Auditor.class,
 					Recipe.class,
 					ServiceVisit.class,
 					VendingMachine.class,
@@ -151,11 +155,11 @@ public class LocalFacadeTest {
 
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
-		facade.visitVendingMachine(technician, machine, date, items);
+		ServiceVisit visit = facade.visitVendingMachine(technician, machine, date, items);
 		em.getTransaction().commit();
 
 		assertNull(technician.getStockOfType(type));
-		assertEquals(10, machine.getStockOfType(type).getCount());
+		assertEquals(10, visit.getStockOfType(type).getCount());
 	}
 
 	@Test
@@ -179,5 +183,34 @@ public class LocalFacadeTest {
 		TechnicianUpdateData data = facade.technicianUpdateData(em.find(Technician.class, 1L));
 		assertTrue(data.getItems().size() > 1);
 		assertEquals(1, data.getVendingMachines().size());
+	}
+
+	@Test
+	public void testSendAuditOfFiveSpriteBottles() {
+		Auditor auditor = em.find(Auditor.class, 2L);
+		VendingMachine machine = em.find(VendingMachine.class, 1L);
+		Collection<AuditLog> logs = new ArrayList<AuditLog>();
+		Date date = new Date(2013, 1, 4);
+
+		final ProductType type = new ProductType();
+		type.setName("Sprite");
+		em.persist(type);
+
+		List<ProductType> types = new ArrayList<ProductType>() {{
+			add(type);
+		}};
+		Recipe recipe = new Recipe(types, 20);
+
+		AuditLog log = new AuditLog(5, recipe);
+		logs.add(log);
+		Audit audit = facade.sendAudit(auditor, machine, logs, date);
+
+		em.flush();
+		em.getTransaction().commit();
+
+		assertSame(date, audit.getDateTime());
+		assertSame(machine, audit.getVendingMachine());
+		assertSame(auditor, audit.getAuditor());
+		assertSame(log, audit.getRecipeLogs().get(0));
 	}
 }
