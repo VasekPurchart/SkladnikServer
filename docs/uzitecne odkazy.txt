@@ -1,0 +1,5 @@
+Security nastaveni - skutecny priklad
+http://stackoverflow.com/questions/3078048/how-to-configure-jboss-databaseserverloginmodule-for-digest-authentication-in-a
+
+Security dokumentace
+http://docs.jboss.org/jbosssecurity/docs/6.0/security_guide/html/Login_Modules.html#sect-IdentityLoginModule
