@@ -55,6 +55,7 @@ public class LocalFacadeTest {
 					ProductType.class,
 					Audit.class,
 					AuditLog.class,
+					AuditReport.class,
 					Auditor.class,
 					Recipe.class,
 					ServiceVisit.class,
@@ -212,5 +213,52 @@ public class LocalFacadeTest {
 		assertSame(machine, audit.getVendingMachine());
 		assertSame(auditor, audit.getAuditor());
 		assertSame(log, audit.getRecipeLogs().get(0));
+	}
+
+	private Audit createAudit(Date date, VendingMachine machine) {
+		Auditor auditor = em.find(Auditor.class, 2L);
+		Collection<AuditLog> logs = new ArrayList<AuditLog>();
+
+		final ProductType type = new ProductType();
+		type.setName("Mirinda");
+		em.persist(type);
+
+		List<ProductType> types = new ArrayList<ProductType>() {{
+			add(type);
+		}};
+		Recipe recipe = new Recipe(types, 20);
+
+		AuditLog log = new AuditLog(5, recipe);
+		logs.add(log);
+		return facade.sendAudit(auditor, machine, logs, date);
+	}
+
+	@Test
+	public void testExportAudits() {
+		VendingMachine machine = new VendingMachine();
+		machine.setAddress("Jihlavská 9");
+		machine.setNumber(230);
+		em.persist(machine);
+
+		Audit audit = createAudit(new Date(113, 1, 5), machine);
+
+		final ProductType type = new ProductType();
+		type.setName("Cappy");
+		em.persist(type);
+
+		ProductStock stock = new ProductStock();
+		stock.setProductType(type);
+		stock.incrementCount(10);
+		em.persist(stock);
+
+		Collection<ProductStock> items = new ArrayList<ProductStock>();
+		items.add(stock);
+		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+
+		AuditReport report = facade.exportAudits(audit);
+		assertNull(report.getLastAudit());
+		assertSame(audit, report.getCurrentAudit());
+		assertEquals(1, report.getServiceVisits().size());
+		assertTrue(report.getServiceVisits().contains(visit));
 	}
 }

@@ -42,4 +42,25 @@ public class VendingMachine implements Serializable {
 
 	@OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "vendingMachine")
 	private List<Audit> audits = new ArrayList<Audit>();
+
+	public void addAudit(Audit audit) {
+		audits.add(audit);
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public String getAddress() {
+		return adress;
+	}
+
+	public void setAddress(String address) {
+		this.adress = address;
+	}
+
 }
