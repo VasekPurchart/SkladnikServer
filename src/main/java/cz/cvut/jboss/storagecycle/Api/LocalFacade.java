@@ -7,9 +7,6 @@ import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 
 @ApplicationScoped
 public class LocalFacade {
@@ -38,5 +35,27 @@ public class LocalFacade {
 		em.flush();
 	}
 
+	public void transferToTechnician(ProductType type, int count, Person technician) throws StockNotAvailableException {
+		Warehouse warehouse = getWarehouse();
+		ProductStock warehouseStock = warehouse.getStockOfType(type);
+		if (warehouseStock == null) {
+			throw new StockNotAvailableException("Warehouse does not have stock of " + type.getName() + ".");
+		}
+		if (warehouseStock.getCount() < count) {
+			throw new StockNotAvailableException(
+				"Warehouse has only " + warehouseStock.getCount() + " pieces of " + type.getName() + ", " + count + " requested."
+			);
+		}
+		warehouseStock.decrementCount(count);
+		ProductStock technicianStock = technician.getStockOfType(type);
+		if (technicianStock == null) {
+			technicianStock = new ProductStock();
+			technicianStock.setProductType(type);
+			technician.addStock(technicianStock);
+			em.persist(technicianStock);
+		}
+		technicianStock.incrementCount(count);
+		em.flush();
+	}
 
 }

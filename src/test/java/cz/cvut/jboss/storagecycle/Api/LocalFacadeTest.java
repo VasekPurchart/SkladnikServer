@@ -18,8 +18,10 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,6 +40,7 @@ public class LocalFacadeTest {
     			.addClasses(
 					EntityManagerProducer.class,
 					LocalFacade.class,
+					StockNotAvailableException.class,
 					Person.class,
 					ProductStock.class,
 					ProductType.class,
@@ -53,6 +56,18 @@ public class LocalFacadeTest {
 				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"), "beans.xml");
     }
 
+	@Before
+	public void setUp() {
+		em.getTransaction().begin();
+	}
+
+	@After
+	public void tearDown() {
+		if (em.getTransaction().isActive()) {
+			em.getTransaction().rollback();
+		}
+	}
+
     @Test
     public void testGetWarehouse() {
 		assertTrue(facade.getWarehouse() instanceof Warehouse);
@@ -60,7 +75,6 @@ public class LocalFacadeTest {
 
 	@Test
 	public void testImportToWarehouse() {
-		em.getTransaction().begin();
 		ProductType type = new ProductType();
 		type.setName("CocaCola");
 		em.persist(type);
@@ -70,5 +84,45 @@ public class LocalFacadeTest {
 		em.getTransaction().commit();
 
 		assertEquals(40, facade.getWarehouse().getStockOfType(type).getCount());
+	}
+
+	@Test(expected=StockNotAvailableException.class)
+	public void testTransferToTechnicianNonexistentStock() throws StockNotAvailableException {
+		ProductType type = new ProductType();
+		type.setName("Pepsi");
+		em.persist(type);
+
+		Person technician = em.find(Person.class, 1L);
+		facade.transferToTechnician(type, 10, technician);
+	}
+
+	@Test(expected=StockNotAvailableException.class)
+	public void testTransferToTechnicianDepletedStock() throws StockNotAvailableException {
+		ProductType type = new ProductType();
+		type.setName("RC Cola");
+		em.persist(type);
+
+		facade.importToWarehouse(type, 10);
+
+		Person technician = em.find(Person.class, 1L);
+		facade.transferToTechnician(type, 20, technician);
+	}
+
+	@Test
+	public void testTransferToTechnician() throws StockNotAvailableException {
+		ProductType type = new ProductType();
+		type.setName("Coca Cola");
+		em.persist(type);
+
+		facade.importToWarehouse(type, 20);
+
+		Person technician = em.find(Person.class, 1L);
+		facade.transferToTechnician(type, 5, technician);
+		facade.transferToTechnician(type, 5, technician);
+
+		em.getTransaction().commit();
+
+		assertEquals(10, facade.getWarehouse().getStockOfType(type).getCount());
+		assertEquals(10, technician.getStockOfType(type).getCount());
 	}
 }
