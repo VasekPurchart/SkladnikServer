@@ -2,6 +2,7 @@ package cz.cvut.jboss.storagecycle.Api;
 
 import cz.cvut.jboss.storagecycle.EntityManagerProducer;
 import cz.cvut.jboss.storagecycle.Person.Person;
+import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
 import cz.cvut.jboss.storagecycle.VendingMachine.Audit;
@@ -42,6 +43,7 @@ public class LocalFacadeTest {
 					LocalFacade.class,
 					StockNotAvailableException.class,
 					Person.class,
+					Technician.class,
 					ProductStock.class,
 					ProductType.class,
 					Audit.class,
@@ -92,7 +94,7 @@ public class LocalFacadeTest {
 		type.setName("Pepsi");
 		em.persist(type);
 
-		Person technician = em.find(Person.class, 1L);
+		Technician technician = em.find(Technician.class, 1L);
 		facade.transferToTechnician(type, 10, technician);
 	}
 
@@ -104,7 +106,7 @@ public class LocalFacadeTest {
 
 		facade.importToWarehouse(type, 10);
 
-		Person technician = em.find(Person.class, 1L);
+		Technician technician = em.find(Technician.class, 1L);
 		facade.transferToTechnician(type, 20, technician);
 	}
 
@@ -116,7 +118,7 @@ public class LocalFacadeTest {
 
 		facade.importToWarehouse(type, 20);
 
-		Person technician = em.find(Person.class, 1L);
+		Technician technician = em.find(Technician.class, 1L);
 		facade.transferToTechnician(type, 5, technician);
 		facade.transferToTechnician(type, 5, technician);
 

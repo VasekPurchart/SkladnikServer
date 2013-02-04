@@ -1,9 +1,12 @@
 package cz.cvut.jboss.storagecycle.Api;
 
-import cz.cvut.jboss.storagecycle.Person.Person;
+import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
+import java.util.Collection;
+import java.util.Date;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -35,7 +38,7 @@ public class LocalFacade {
 		em.flush();
 	}
 
-	public void transferToTechnician(ProductType type, int count, Person technician) throws StockNotAvailableException {
+	public void transferToTechnician(ProductType type, int count, Technician technician) throws StockNotAvailableException {
 		Warehouse warehouse = getWarehouse();
 		ProductStock warehouseStock = warehouse.getStockOfType(type);
 		if (warehouseStock == null) {
@@ -56,6 +59,10 @@ public class LocalFacade {
 		}
 		technicianStock.incrementCount(count);
 		em.flush();
+	}
+
+	public void visitVendingMachine(Technician technician, VendingMachine vendingMachine, Date date, Collection<ProductStock> items) {
+
 	}
 
 }
