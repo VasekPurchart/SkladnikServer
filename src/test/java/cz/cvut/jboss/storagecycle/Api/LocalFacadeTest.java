@@ -151,7 +151,7 @@ public class LocalFacadeTest {
 		technician.addStock(stock);
 
 		VendingMachine machine = em.find(VendingMachine.class, 1L);
-		Date date = new Date(2013, 1, 4);
+		Date date = new Date();
 
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
@@ -165,7 +165,7 @@ public class LocalFacadeTest {
 	@Test
 	public void testSetCashWithdrawnForVisit() {
 		ServiceVisit visit = new ServiceVisit();
-		visit.visit(em.find(VendingMachine.class, 1L), em.find(Technician.class, 1L), new Date(2013, 2, 3));
+		visit.visit(em.find(VendingMachine.class, 1L), em.find(Technician.class, 1L), new Date());
 		em.persist(visit);
 		facade.setCashWithdrawnForVisit(visit, 100);
 		em.getTransaction().commit();
@@ -190,7 +190,7 @@ public class LocalFacadeTest {
 		Auditor auditor = em.find(Auditor.class, 2L);
 		VendingMachine machine = em.find(VendingMachine.class, 1L);
 		Collection<AuditLog> logs = new ArrayList<AuditLog>();
-		Date date = new Date(2013, 1, 4);
+		Date date = new Date();
 
 		final ProductType type = new ProductType();
 		type.setName("Sprite");
