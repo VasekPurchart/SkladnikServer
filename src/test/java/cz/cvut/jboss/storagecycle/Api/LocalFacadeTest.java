@@ -55,7 +55,8 @@ public class LocalFacadeTest {
 					Recipe.class,
 					ServiceVisit.class,
 					VendingMachine.class,
-					Warehouse.class
+					Warehouse.class,
+					TechnicianUpdateData.class
 				)
     			.addAsResource(new File("src/main/resources/META-INF/persistence.xml"), "META-INF/persistence.xml")
 				.addAsResource(new File("src/main/resources/import.sql"), "import.sql")
@@ -165,5 +166,18 @@ public class LocalFacadeTest {
 		facade.setCashWithdrawnForVisit(visit, 100);
 		em.getTransaction().commit();
 		assertEquals(100, visit.getWithdrawnCash());
+	}
+
+	@Test
+	public void testTechnicianUpdateData() {
+		ProductType type = new ProductType();
+		type.setName("Mirinda");
+		em.persist(type);
+
+		facade.importToWarehouse(type, 20);
+
+		TechnicianUpdateData data = facade.technicianUpdateData(em.find(Technician.class, 1L));
+		assertTrue(data.getItems().size() > 1);
+		assertEquals(1, data.getVendingMachines().size());
 	}
 }

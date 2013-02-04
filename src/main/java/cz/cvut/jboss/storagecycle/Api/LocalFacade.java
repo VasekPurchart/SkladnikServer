@@ -18,10 +18,6 @@ public class LocalFacade {
 	@Inject
 	private EntityManager em;
 
-	public EntityManager getEntityManager() {
-		return em;
-	}
-
 	public Warehouse getWarehouse() {
 		return em.find(Warehouse.class, 1L);
 	}
@@ -78,6 +74,13 @@ public class LocalFacade {
 	public void setCashWithdrawnForVisit(ServiceVisit visit, int cash) {
 		visit.setWithdrawnCash(cash);
 		em.flush();
+	}
+
+	public TechnicianUpdateData technicianUpdateData(Technician technician) {
+		Collection<ProductStock> items = getWarehouse().getItems();
+		Collection<VendingMachine> vendingMachines = em.createQuery("SELECT e FROM VendingMachine e").getResultList();
+
+		return new TechnicianUpdateData(items, vendingMachines);
 	}
 
 }
