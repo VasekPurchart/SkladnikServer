@@ -98,6 +98,8 @@ public class LocalFacade {
 			audit.addRecipeLog(log);
 		}
 
+		em.flush();
+
 		return audit;
 	}
 
@@ -126,6 +128,10 @@ public class LocalFacade {
 		.getResultList();
 
 		return new AuditReport(visits, auditFrom, auditTo);
+	}
+
+	public Collection<ProductType> getProductTypes() {
+		return em.createQuery("SELECT e FROM ProductType e ORDER BY e.name ASC").getResultList();
 	}
 
 }

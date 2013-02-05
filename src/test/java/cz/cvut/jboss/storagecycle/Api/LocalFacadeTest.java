@@ -180,6 +180,7 @@ public class LocalFacadeTest {
 		em.persist(type);
 
 		facade.importToWarehouse(type, 20);
+		em.getTransaction().commit();
 
 		TechnicianUpdateData data = facade.technicianUpdateData(em.find(Technician.class, 1L));
 		assertTrue(data.getItems().size() > 1);
@@ -205,8 +206,6 @@ public class LocalFacadeTest {
 		AuditLog log = new AuditLog(5, recipe);
 		logs.add(log);
 		Audit audit = facade.sendAudit(auditor, machine, logs, date);
-
-		em.flush();
 		em.getTransaction().commit();
 
 		assertSame(date, audit.getDateTime());
@@ -254,6 +253,7 @@ public class LocalFacadeTest {
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
 		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+		em.getTransaction().commit();
 
 		AuditReport report = facade.exportAudits(audit);
 		assertNull(report.getLastAudit());
@@ -263,7 +263,7 @@ public class LocalFacadeTest {
 	}
 
 	@Test
-	public void tetExportMoreAudits() {
+	public void testExportMoreAudits() {
 		VendingMachine machine = new VendingMachine();
 		machine.setAddress("Jihlavská 9");
 		machine.setNumber(230);
@@ -284,6 +284,7 @@ public class LocalFacadeTest {
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
 		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+		em.getTransaction().commit();
 
 		AuditReport report = facade.exportAudits(currentAudit);
 		assertSame(lastAudit, report.getLastAudit());
@@ -291,4 +292,17 @@ public class LocalFacadeTest {
 		assertEquals(1, report.getServiceVisits().size());
 		assertTrue(report.getServiceVisits().contains(visit));
 	}
+
+	@Test
+	public void testGetProductTypes() {
+		ProductType type = new ProductType();
+		type.setName("Fanta");
+		em.persist(type);
+		em.flush();
+		em.getTransaction().commit();
+
+		Collection<ProductType> types = facade.getProductTypes();
+		types.contains(type);
+	}
+
 }
