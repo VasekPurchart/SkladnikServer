@@ -4,13 +4,8 @@
 	xsi:schemaLocation="
         http://java.sun.com/xml/ns/persistence
         http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-	<persistence-unit name="primary">
-		<jta-data-source>java:/storageCycle</jta-data-source>
-		<class>cz.cvut.jboss.storagecycle.VendingMachine.AuditLog</class>
-		<class>cz.cvut.jboss.storagecycle.VendingMachine.Audit</class>
-		<class>cz.cvut.jboss.storagecycle.Product.ProductType</class>
-		<class>cz.cvut.jboss.storagecycle.Product.ProductStock</class>
-		<class>cz.cvut.jboss.storagecycle.Person.Person</class>
+	<persistence-unit name="primary" transaction-type="RESOURCE_LOCAL">
+		<non-jta-data-source>java:/storageCycle</non-jta-data-source>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create" />
 			<property name="hibernate.archive.autodetection" value="class" />

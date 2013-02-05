@@ -14,31 +14,53 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
+import cz.cvut.jboss.storagecycle.Product.ProductType;
+import javax.persistence.FetchType;
 
 @Entity
 @XmlRootElement
 public class VendingMachine implements Serializable {
-   /** Default value included to remove warning. Remove or modify at will. **/
-   private static final long serialVersionUID = 1L;
 
-   @Id
-   @GeneratedValue
-   private Long id;
+	/**
+	 * Default value included to remove warning. Remove or modify at will. *
+	 */
+	private static final long serialVersionUID = 1L;
 
-   @NotNull
-   @Min(1)
-   private int number;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-   @NotNull
-   private String adress;
-   
-   @OneToMany(cascade={CascadeType.PERSIST})
-   private List<Recipe> recipes = new ArrayList<Recipe>();
-   
-   @OneToMany(cascade={CascadeType.PERSIST})
-   private List<ProductStock> items = new ArrayList<ProductStock>();
-   
-   @OneToMany(cascade={CascadeType.PERSIST}, mappedBy="vendingMachine")
-   private List<Audit> audits = new ArrayList<Audit>();
-   
+	@NotNull
+	@Min(1)
+	private int number;
+
+	@NotNull
+	private String adress;
+
+	@OneToMany(cascade = {CascadeType.PERSIST})
+	private List<Recipe> recipes = new ArrayList<Recipe>();
+
+	@OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "vendingMachine")
+	private List<Audit> audits = new ArrayList<Audit>();
+
+	public void addAudit(Audit audit) {
+		audits.add(audit);
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public String getAddress() {
+		return adress;
+	}
+
+	public void setAddress(String address) {
+		this.adress = address;
+	}
+
 }
