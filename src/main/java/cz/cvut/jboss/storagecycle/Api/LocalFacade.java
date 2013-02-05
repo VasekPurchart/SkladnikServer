@@ -138,4 +138,14 @@ public class LocalFacade {
 		return em.createQuery("SELECT e FROM Technician e ORDER BY e.name ASC").getResultList();
 	}
 
+	public Collection<VendingMachine> getVendingMachines() {
+		return em.createQuery("SELECT e FROM VendingMachine e ORDER BY e.number ASC").getResultList();
+	}
+
+	public Collection<Audit> getAudits(VendingMachine machine) {
+		return em.createQuery(
+			"SELECT e FROM Audit e WHERE e.vendingMachine = :vendingMachine ORDER BY e.dateTime ASC"
+		).setParameter("vendingMachine", machine).getResultList();
+	}
+
 }

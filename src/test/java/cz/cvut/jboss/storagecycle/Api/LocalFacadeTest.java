@@ -312,4 +312,23 @@ public class LocalFacadeTest {
 		assertTrue(technicians.contains(technician));
 	}
 
+	@Test
+	public void testGetVendingMachines() {
+		VendingMachine machine = em.find(VendingMachine.class, 1L);
+		Collection<VendingMachine> machines = facade.getVendingMachines();
+		assertTrue(machines.contains(machine));
+	}
+
+	@Test
+	public void testGetAudits() {
+		Auditor auditor = em.find(Auditor.class, 2L);
+		VendingMachine machine = em.find(VendingMachine.class, 1L);
+		Collection<AuditLog> logs = new ArrayList<AuditLog>();
+		Audit audit = facade.sendAudit(auditor, machine, logs, new Date());
+		em.getTransaction().commit();
+
+		Collection<Audit> audits = facade.getAudits(machine);
+		assertTrue(audits.contains(audit));
+	}
+
 }
