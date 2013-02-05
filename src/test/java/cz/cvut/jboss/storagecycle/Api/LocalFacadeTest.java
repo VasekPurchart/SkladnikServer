@@ -302,7 +302,14 @@ public class LocalFacadeTest {
 		em.getTransaction().commit();
 
 		Collection<ProductType> types = facade.getProductTypes();
-		types.contains(type);
+		assertTrue(types.contains(type));
+	}
+
+	@Test
+	public void testGetTechnicians() {
+		Technician technician = em.find(Technician.class, 1L);
+		Collection<Technician> technicians = facade.getTechnicians();
+		assertTrue(technicians.contains(technician));
 	}
 
 }

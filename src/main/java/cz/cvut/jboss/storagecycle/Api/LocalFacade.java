@@ -134,4 +134,8 @@ public class LocalFacade {
 		return em.createQuery("SELECT e FROM ProductType e ORDER BY e.name ASC").getResultList();
 	}
 
+	public Collection<Technician> getTechnicians() {
+		return em.createQuery("SELECT e FROM Technician e ORDER BY e.name ASC").getResultList();
+	}
+
 }
