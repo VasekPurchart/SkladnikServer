@@ -261,4 +261,34 @@ public class LocalFacadeTest {
 		assertEquals(1, report.getServiceVisits().size());
 		assertTrue(report.getServiceVisits().contains(visit));
 	}
+
+	@Test
+	public void tetExportMoreAudits() {
+		VendingMachine machine = new VendingMachine();
+		machine.setAddress("Jihlavská 9");
+		machine.setNumber(230);
+		em.persist(machine);
+
+		Audit lastAudit = createAudit(new Date(113, 1, 2), machine);
+		Audit currentAudit = createAudit(new Date(113, 1, 5), machine);
+
+		final ProductType type = new ProductType();
+		type.setName("Cappy");
+		em.persist(type);
+
+		ProductStock stock = new ProductStock();
+		stock.setProductType(type);
+		stock.incrementCount(10);
+		em.persist(stock);
+
+		Collection<ProductStock> items = new ArrayList<ProductStock>();
+		items.add(stock);
+		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+
+		AuditReport report = facade.exportAudits(currentAudit);
+		assertSame(lastAudit, report.getLastAudit());
+		assertSame(currentAudit, report.getCurrentAudit());
+		assertEquals(1, report.getServiceVisits().size());
+		assertTrue(report.getServiceVisits().contains(visit));
+	}
 }
