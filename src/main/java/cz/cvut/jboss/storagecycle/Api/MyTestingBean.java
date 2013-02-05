@@ -8,21 +8,22 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
+import org.jboss.ejb3.annotation.SecurityDomain;
+
 /**
  *
  * @author mist
  */
 @Stateless
 @LocalBean
-//@SecurityDomain("JBossWS")
+@SecurityDomain("helloworld-webservice-login")
 public class MyTestingBean {
 
-    @RolesAllowed("good")
+    @RolesAllowed("say-hello")
     public String helloGood(String name) {
         return "Hello good " + name;
     }
     
-    @RolesAllowed("bad")
     public String helloBad(String name) {
         return "Hello bad " + name;
     }

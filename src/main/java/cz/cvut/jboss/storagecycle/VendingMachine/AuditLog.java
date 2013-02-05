@@ -28,6 +28,11 @@ public class AuditLog implements Serializable {
    @ManyToOne(cascade={CascadeType.PERSIST})
    private Recipe recipe;
 
+   public AuditLog()
+   {
+	   
+   }
+   
    public AuditLog(int pushCounterState, Recipe recipe) {
 	   this.pushCounterState = pushCounterState;
 	   this.recipe = recipe;
