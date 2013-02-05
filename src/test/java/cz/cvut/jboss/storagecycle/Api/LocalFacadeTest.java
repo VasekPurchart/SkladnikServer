@@ -1,5 +1,6 @@
 package cz.cvut.jboss.storagecycle.Api;
 
+import cz.cvut.jboss.storagecycle.CacheManagerProducer;
 import cz.cvut.jboss.storagecycle.EntityManagerProducer;
 import cz.cvut.jboss.storagecycle.Person.Auditor;
 import cz.cvut.jboss.storagecycle.Person.Person;
@@ -24,6 +25,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -44,9 +47,13 @@ public class LocalFacadeTest {
 
     @Deployment
     public static Archive<?> getDeployment() {
+		MavenDependencyResolver resolver = DependencyResolvers.use(
+			MavenDependencyResolver.class
+		).loadMetadataFromPom("pom.xml");
     	return ShrinkWrap.create(WebArchive.class, "test.war")
     			.addClasses(
 					EntityManagerProducer.class,
+					CacheManagerProducer.class,
 					LocalFacade.class,
 					StockNotAvailableException.class,
 					Person.class,
@@ -62,8 +69,10 @@ public class LocalFacadeTest {
 					VendingMachine.class,
 					Warehouse.class,
 					TechnicianUpdateData.class
-				)
+				).
+				addAsLibraries(resolver.artifact("org.infinispan:infinispan-core").resolveAsFiles())
     			.addAsResource(new File("src/main/resources/META-INF/persistence.xml"), "META-INF/persistence.xml")
+				.addAsResource(new File("infinispan.xml"), "infinispan.xml")
 				.addAsResource(new File("src/main/resources/import.sql"), "import.sql")
 				.addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"), "beans.xml");
     }

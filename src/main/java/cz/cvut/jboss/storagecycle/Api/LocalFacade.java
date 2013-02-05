@@ -15,12 +15,21 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import org.infinispan.Cache;
+import org.infinispan.manager.CacheContainer;
 
 @ApplicationScoped
 public class LocalFacade {
 
 	@Inject
 	private EntityManager em;
+
+	@Inject
+	private CacheContainer cacheContainer;
+
+	private Cache<String, Object> getCache() {
+		return cacheContainer.getCache();
+	}
 
 	public Warehouse getWarehouse() {
 		return em.find(Warehouse.class, 1L);
@@ -104,30 +113,35 @@ public class LocalFacade {
 	}
 
 	public AuditReport exportAudits(Audit auditTo) {
-		List<Audit> auditList = em.createQuery(
-			"SELECT e FROM Audit e WHERE e.dateTime <= :datetime AND e.id != :id AND e.vendingMachine = :vendingMachine ORDER BY e.dateTime DESC"
-		).setParameter("id", auditTo.getId())
-		.setParameter("datetime", auditTo.getDateTime())
-		.setParameter("vendingMachine", auditTo.getVendingMachine())
-		.setMaxResults(1)
-		.getResultList();
+		String key = "audits" + auditTo.getId();
+		if (!getCache().containsKey(key)) {
+			List<Audit> auditList = em.createQuery(
+				"SELECT e FROM Audit e WHERE e.dateTime <= :datetime AND e.id != :id AND e.vendingMachine = :vendingMachine ORDER BY e.dateTime DESC"
+			).setParameter("id", auditTo.getId())
+			.setParameter("datetime", auditTo.getDateTime())
+			.setParameter("vendingMachine", auditTo.getVendingMachine())
+			.setMaxResults(1)
+			.getResultList();
 
-		Audit auditFrom = !auditList.isEmpty() ? auditList.get(0) : null;
+			Audit auditFrom = !auditList.isEmpty() ? auditList.get(0) : null;
 
-		Date to = auditTo.getDateTime();
+			Date to = auditTo.getDateTime();
 
-		Date from = new Date(70, 1, 1);
-		if (auditFrom != null) {
-			from = auditFrom.getDateTime();
+			Date from = new Date(70, 1, 1);
+			if (auditFrom != null) {
+				from = auditFrom.getDateTime();
+			}
+
+			List<ServiceVisit> visits = em.createQuery("SELECT e FROM ServiceVisit e WHERE e.vendingMachine = :vendingMachine AND e.dateTime >= :from AND e.dateTime <= :to")
+			.setParameter("vendingMachine", auditTo.getVendingMachine())
+			.setParameter("from", from)
+			.setParameter("to", to)
+			.getResultList();
+
+			getCache().put(key, new AuditReport(visits, auditFrom, auditTo));
 		}
 
-		List<ServiceVisit> visits = em.createQuery("SELECT e FROM ServiceVisit e WHERE e.vendingMachine = :vendingMachine AND e.dateTime >= :from AND e.dateTime <= :to")
-		.setParameter("vendingMachine", auditTo.getVendingMachine())
-		.setParameter("from", from)
-		.setParameter("to", to)
-		.getResultList();
-
-		return new AuditReport(visits, auditFrom, auditTo);
+		return (AuditReport) getCache().get(key);
 	}
 
 	public Collection<ProductType> getProductTypes() {
