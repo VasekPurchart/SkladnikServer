@@ -12,13 +12,13 @@ import cz.cvut.jboss.storagecycle.Warehouse.Warehouse;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 
-@ApplicationScoped
+@Stateless
 public class LocalFacade {
 
 	@Inject
