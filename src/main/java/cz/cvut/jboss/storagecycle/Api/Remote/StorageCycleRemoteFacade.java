@@ -7,6 +7,7 @@ import cz.cvut.jboss.storagecycle.Product.ProductRepository;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
 import cz.cvut.jboss.storagecycle.Product.StockNotAvailableException;
+import cz.cvut.jboss.storagecycle.VendingMachine.ServiceVisit;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachineRepository;
 import java.util.ArrayList;
@@ -56,5 +57,10 @@ public class StorageCycleRemoteFacade {
 		}
 
 		local.visitVendingMachine(technician, vendingMachine, serviceVisitDTO.timestamp, items);
+	}
+
+	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) {
+		ServiceVisit serviceVisit = vendingMachineRepository.findServiceVisitById(serviceVisitId);
+		local.setCashWithdrawnForVisit(serviceVisit, cash);
 	}
 }

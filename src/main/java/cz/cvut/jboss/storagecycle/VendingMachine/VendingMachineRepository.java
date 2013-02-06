@@ -16,4 +16,7 @@ public class VendingMachineRepository {
 		return em.find(VendingMachine.class, id);
 	}
 
+	public ServiceVisit findServiceVisitById(long id) {
+		return em.find(ServiceVisit.class, id);
+	}
 }
