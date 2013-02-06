@@ -15,8 +15,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @XmlRootElement
-@Inheritance(strategy=InheritanceType.JOINED)
-@DiscriminatorColumn(name="type")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "type")
 public class Person implements Serializable, Principal {
 
 	/**
@@ -37,8 +37,16 @@ public class Person implements Serializable, Principal {
 	@Pattern(regexp = "\\d{15,17}")
 	private String phoneId;
 
+	public Long getId() {
+		return id;
+	}
+
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	public String getPhoneId() {
+		return phoneId;
 	}
 }

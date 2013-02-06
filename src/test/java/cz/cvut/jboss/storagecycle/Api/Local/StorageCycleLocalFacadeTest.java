@@ -7,6 +7,8 @@ import cz.cvut.jboss.storagecycle.Person.Person;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.Product.StockNotAvailableException;
+import cz.cvut.jboss.storagecycle.Product.StockService;
 import cz.cvut.jboss.storagecycle.VendingMachine.Audit;
 import cz.cvut.jboss.storagecycle.VendingMachine.AuditLog;
 import cz.cvut.jboss.storagecycle.VendingMachine.Recipe;
@@ -68,7 +70,7 @@ public class StorageCycleLocalFacadeTest {
 					ServiceVisit.class,
 					VendingMachine.class,
 					Warehouse.class,
-					TechnicianUpdateData.class
+					StockService.class
 				).
 				addAsLibraries(resolver.artifact("org.infinispan:infinispan-core").resolveAsFiles())
     			.addAsResource(new File("src/main/resources/META-INF/persistence.xml"), "META-INF/persistence.xml")
@@ -98,6 +100,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testImportToWarehouse() {
 		ProductType type = new ProductType();
 		type.setName("CocaCola");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		facade.importToWarehouse(type, 20);
@@ -110,6 +113,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testTransferToTechnicianNonexistentStock() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("Pepsi");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		Technician technician = em.find(Technician.class, 1L);
@@ -120,6 +124,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testTransferToTechnicianDepletedStock() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("RC Cola");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		facade.importToWarehouse(type, 10);
@@ -132,6 +137,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testTransferToTechnician() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("Coca Cola");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		facade.importToWarehouse(type, 20);
@@ -145,16 +151,16 @@ public class StorageCycleLocalFacadeTest {
 	}
 
 	@Test
-	public void testVisitVendingMachine() {
+	public void testVisitVendingMachine() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("Foo Bar");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		Technician technician = em.find(Technician.class, 1L);
 		ProductStock stock = new ProductStock();
 		stock.setProductType(type);
 		stock.incrementCount(10);
-		em.persist(stock);
 		technician.addStock(stock);
 
 		VendingMachine machine = em.find(VendingMachine.class, 1L);
@@ -178,18 +184,6 @@ public class StorageCycleLocalFacadeTest {
 	}
 
 	@Test
-	public void testTechnicianUpdateData() {
-		ProductType type = new ProductType();
-		type.setName("Mirinda");
-		em.persist(type);
-		facade.importToWarehouse(type, 20);
-
-		TechnicianUpdateData data = facade.technicianUpdateData(em.find(Technician.class, 1L));
-		assertTrue(data.getItems().size() == 1);
-		assertEquals(1, data.getVendingMachines().size());
-	}
-
-	@Test
 	public void testSendAuditOfFiveSpriteBottles() {
 		Auditor auditor = em.find(Auditor.class, 2L);
 		VendingMachine machine = em.find(VendingMachine.class, 1L);
@@ -198,12 +192,13 @@ public class StorageCycleLocalFacadeTest {
 
 		final ProductType type = new ProductType();
 		type.setName("Sprite");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		List<ProductType> types = new ArrayList<ProductType>() {{
 			add(type);
 		}};
-		Recipe recipe = new Recipe(types, 20);
+		Recipe recipe = new Recipe(types, 20, 1);
 
 		AuditLog log = new AuditLog(5, recipe);
 		logs.add(log);
@@ -221,12 +216,13 @@ public class StorageCycleLocalFacadeTest {
 
 		final ProductType type = new ProductType();
 		type.setName("Mirinda");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		List<ProductType> types = new ArrayList<ProductType>() {{
 			add(type);
 		}};
-		Recipe recipe = new Recipe(types, 20);
+		Recipe recipe = new Recipe(types, 20, 1);
 
 		AuditLog log = new AuditLog(5, recipe);
 		logs.add(log);
@@ -234,26 +230,27 @@ public class StorageCycleLocalFacadeTest {
 	}
 
 	@Test
-	public void testExportAudits() {
+	public void testExportAudits() throws StockNotAvailableException {
 		VendingMachine machine = new VendingMachine();
 		machine.setAddress("Jihlavská 9");
 		machine.setNumber(230);
 		em.persist(machine);
 
+		Technician technician = em.find(Technician.class, 1L);
+
 		Audit audit = createAudit(new Date(113, 1, 5), machine);
 
 		final ProductType type = new ProductType();
 		type.setName("Cappy");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
-		ProductStock stock = new ProductStock();
-		stock.setProductType(type);
-		stock.incrementCount(10);
-		em.persist(stock);
+		ProductStock stock = new ProductStock(10, type);
+		technician.addStock(stock);
 
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
-		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+		ServiceVisit visit = facade.visitVendingMachine(technician, machine, new Date(113, 1, 2), items);
 
 		AuditReport report = facade.exportAudits(audit);
 		assertNull(report.getLastAudit());
@@ -263,27 +260,28 @@ public class StorageCycleLocalFacadeTest {
 	}
 
 	@Test
-	public void testExportMoreAudits() {
+	public void testExportMoreAudits() throws StockNotAvailableException {
 		VendingMachine machine = new VendingMachine();
 		machine.setAddress("Jihlavská 9");
 		machine.setNumber(230);
 		em.persist(machine);
+
+		Technician technician = em.find(Technician.class, 1L);
 
 		Audit lastAudit = createAudit(new Date(113, 1, 2), machine);
 		Audit currentAudit = createAudit(new Date(113, 1, 5), machine);
 
 		final ProductType type = new ProductType();
 		type.setName("Cappy");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
-		ProductStock stock = new ProductStock();
-		stock.setProductType(type);
-		stock.incrementCount(10);
-		em.persist(stock);
+		ProductStock stock = new ProductStock(10, type);
+		technician.addStock(stock);
 
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
-		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+		ServiceVisit visit = facade.visitVendingMachine(technician, machine, new Date(113, 1, 2), items);
 
 		AuditReport report = facade.exportAudits(currentAudit);
 		assertSame(lastAudit, report.getLastAudit());
@@ -296,6 +294,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testGetProductTypes() {
 		ProductType type = new ProductType();
 		type.setName("Fanta");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 		em.flush();
 

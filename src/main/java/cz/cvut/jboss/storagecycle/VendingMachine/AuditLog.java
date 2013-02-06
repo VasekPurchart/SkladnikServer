@@ -1,7 +1,6 @@
 package cz.cvut.jboss.storagecycle.VendingMachine;
 
 import java.io.Serializable;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,36 +13,36 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class AuditLog implements Serializable {
-   /** Default value included to remove warning. Remove or modify at will. **/
-   private static final long serialVersionUID = 1L;
 
-   @Id
-   @GeneratedValue
-   private Long id;
+	/**
+	 * Default value included to remove warning. Remove or modify at will. *
+	 */
+	private static final long serialVersionUID = 1L;
 
-   @NotNull
-   @Min(0)
-   private int pushCounterState;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-   @ManyToOne(cascade={CascadeType.PERSIST})
-   private Recipe recipe;
+	@NotNull
+	@Min(0)
+	private int pushCounterState;
 
-   public AuditLog()
-   {
-       
-   }
-   
-   public AuditLog(int pushCounterState, Recipe recipe) {
-	   this.pushCounterState = pushCounterState;
-	   this.recipe = recipe;
-   }
+	@ManyToOne(cascade = {CascadeType.PERSIST})
+	private Recipe recipe;
 
-   public int getPushCounterState() {
-	   return pushCounterState;
-   }
+	public AuditLog() {
+	}
 
-   public Recipe getRecipe() {
-	   return recipe;
-   }
+	public AuditLog(int pushCounterState, Recipe recipe) {
+		this.pushCounterState = pushCounterState;
+		this.recipe = recipe;
+	}
 
+	public int getPushCounterState() {
+		return pushCounterState;
+	}
+
+	public Recipe getRecipe() {
+		return recipe;
+	}
 }
