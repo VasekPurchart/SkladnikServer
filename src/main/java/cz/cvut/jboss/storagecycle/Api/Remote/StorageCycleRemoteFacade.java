@@ -18,13 +18,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.jws.WebService;
 
 /**
  *
  * @author vasek
  */
 @Stateless
-public class StorageCycleRemoteFacade {
+@WebService(serviceName="api", endpointInterface="cz.cvut.jboss.storagecycle.Api.Remote.StorageCycleWS")
+public class StorageCycleRemoteFacade implements StorageCycleWS {
 
 	@Inject
 	private StorageCycleLocalFacade local;
@@ -38,17 +40,20 @@ public class StorageCycleRemoteFacade {
 	@Inject
 	private VendingMachineRepository vendingMachineRepository;
 
+	@Override
 	public void importToWarehouse(String barcode, int count) {
 		ProductType productType = productRepository.findProductTypeByBarcode(barcode);
 		local.importToWarehouse(productType, count);
 	}
 
+	@Override
 	public void transferToTechnician(String barcode, int count, long technicianId) throws StockNotAvailableException {
 		ProductType productType = productRepository.findProductTypeByBarcode(barcode);
 		Technician technician = personRepository.findTechnicianById(technicianId);
 		local.transferToTechnician(productType, count, technician);
 	}
 
+	@Override
 	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StockNotAvailableException {
 		Technician technician = personRepository.findTechnicianById(serviceVisitDTO.technicianId);
 		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(serviceVisitDTO.vendingMachineId);
@@ -63,11 +68,13 @@ public class StorageCycleRemoteFacade {
 		local.visitVendingMachine(technician, vendingMachine, serviceVisitDTO.timestamp, items);
 	}
 
+	@Override
 	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) {
 		ServiceVisit serviceVisit = vendingMachineRepository.findServiceVisitById(serviceVisitId);
 		local.setCashWithdrawnForVisit(serviceVisit, cash);
 	}
 
+	@Override
 	public void sendAudit(AuditDTO auditDTO) {
 		Auditor auditor = personRepository.findAuditorById(auditDTO.personId);
 		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(auditDTO.vendingMachineId);
@@ -80,12 +87,14 @@ public class StorageCycleRemoteFacade {
 		local.sendAudit(auditor, vendingMachine, logs, auditDTO.timestamp);
 	}
 
+	@Override
 	public AuditReportDTO exportAudits(long currentAuditId) {
 		AuditReport auditReport = local.exportAudits(vendingMachineRepository.findAuditById(currentAuditId));
 
 		return new AuditReportDTO(auditReport);
 	}
 
+	@Override
 	public Collection<ProductTypeDTO> getProductTypes() {
 		Collection<ProductTypeDTO> productTypeDTOs = new ArrayList<ProductTypeDTO>();
 		for (ProductType productType : local.getProductTypes()) {
@@ -95,6 +104,7 @@ public class StorageCycleRemoteFacade {
 		return productTypeDTOs;
 	}
 
+	@Override
 	public Collection<TechnicianDTO> getTechnicians() {
 		Collection<TechnicianDTO> technicianDTOs = new ArrayList<TechnicianDTO>();
 		for (Technician technician : local.getTechnicians()) {
@@ -104,6 +114,7 @@ public class StorageCycleRemoteFacade {
 		return technicianDTOs;
 	}
 
+	@Override
 	public Collection<ProductStockDTO> getTechnicianItems(long technicianId) {
 		Technician technician = personRepository.findTechnicianById(technicianId);
 		Collection<ProductStockDTO> items = new ArrayList<ProductStockDTO>();
@@ -114,6 +125,7 @@ public class StorageCycleRemoteFacade {
 		return items;
 	}
 
+	@Override
 	public Collection<VendingMachineDTO> getVendingMachines() {
 		Collection<VendingMachineDTO> machines = new ArrayList<VendingMachineDTO>();
 		for (VendingMachine vendingMachine : local.getVendingMachines()) {
@@ -123,6 +135,7 @@ public class StorageCycleRemoteFacade {
 		return machines;
 	}
 
+	@Override
 	public Collection<AuditDTO> getAudits(long vendingMachineId) {
 		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(vendingMachineId);
 		Collection<AuditDTO> audits = new ArrayList<AuditDTO>();
