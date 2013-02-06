@@ -1,5 +1,6 @@
 package cz.cvut.jboss.storagecycle.Api.Local;
 
+import cz.cvut.jboss.storagecycle.Product.StockNotAvailableException;
 import cz.cvut.jboss.storagecycle.Person.Auditor;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
@@ -37,41 +38,19 @@ public class StorageCycleLocalFacade {
 
 	public void importToWarehouse(ProductType type, int count) {
 		Warehouse warehouse = getWarehouse();
-		ProductStock stock = warehouse.getStockOfType(type);
-		if (stock == null) {
-			stock = new ProductStock();
-			stock.setProductType(type);
-			warehouse.addStock(stock);
-			em.persist(stock);
-		}
-		stock.incrementCount(count);
+		warehouse.addStock(new ProductStock(count, type));
 		em.flush();
 	}
 
 	public void transferToTechnician(ProductType type, int count, Technician technician) throws StockNotAvailableException {
 		Warehouse warehouse = getWarehouse();
-		ProductStock warehouseStock = warehouse.getStockOfType(type);
-		if (warehouseStock == null) {
-			throw new StockNotAvailableException("Warehouse does not have stock of " + type.getName() + ".");
-		}
-		if (warehouseStock.getCount() < count) {
-			throw new StockNotAvailableException(
-				"Warehouse has only " + warehouseStock.getCount() + " pieces of " + type.getName() + ", " + count + " requested."
-			);
-		}
-		warehouseStock.decrementCount(count);
-		ProductStock technicianStock = technician.getStockOfType(type);
-		if (technicianStock == null) {
-			technicianStock = new ProductStock();
-			technicianStock.setProductType(type);
-			technician.addStock(technicianStock);
-			em.persist(technicianStock);
-		}
-		technicianStock.incrementCount(count);
+		ProductStock stock = new ProductStock(count, type);
+		warehouse.removeStock(stock);
+		technician.addStock(stock);
 		em.flush();
 	}
 
-	public ServiceVisit visitVendingMachine(Technician technician, VendingMachine vendingMachine, Date date, Collection<ProductStock> items) {
+	public ServiceVisit visitVendingMachine(Technician technician, VendingMachine vendingMachine, Date date, Collection<ProductStock> items) throws StockNotAvailableException {
 		ServiceVisit visit = new ServiceVisit();
 		visit.visit(vendingMachine, technician, date);
 		em.persist(visit);

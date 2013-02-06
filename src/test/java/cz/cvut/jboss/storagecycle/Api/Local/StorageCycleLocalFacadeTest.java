@@ -7,6 +7,8 @@ import cz.cvut.jboss.storagecycle.Person.Person;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.Product.StockNotAvailableException;
+import cz.cvut.jboss.storagecycle.Product.StockService;
 import cz.cvut.jboss.storagecycle.VendingMachine.Audit;
 import cz.cvut.jboss.storagecycle.VendingMachine.AuditLog;
 import cz.cvut.jboss.storagecycle.VendingMachine.Recipe;
@@ -68,7 +70,8 @@ public class StorageCycleLocalFacadeTest {
 					ServiceVisit.class,
 					VendingMachine.class,
 					Warehouse.class,
-					TechnicianUpdateData.class
+					TechnicianUpdateData.class,
+					StockService.class
 				).
 				addAsLibraries(resolver.artifact("org.infinispan:infinispan-core").resolveAsFiles())
     			.addAsResource(new File("src/main/resources/META-INF/persistence.xml"), "META-INF/persistence.xml")
@@ -149,7 +152,7 @@ public class StorageCycleLocalFacadeTest {
 	}
 
 	@Test
-	public void testVisitVendingMachine() {
+	public void testVisitVendingMachine() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("Foo Bar");
 		type.setBarcode("" + Math.random());
@@ -159,7 +162,6 @@ public class StorageCycleLocalFacadeTest {
 		ProductStock stock = new ProductStock();
 		stock.setProductType(type);
 		stock.incrementCount(10);
-		em.persist(stock);
 		technician.addStock(stock);
 
 		VendingMachine machine = em.find(VendingMachine.class, 1L);
@@ -242,11 +244,13 @@ public class StorageCycleLocalFacadeTest {
 	}
 
 	@Test
-	public void testExportAudits() {
+	public void testExportAudits() throws StockNotAvailableException {
 		VendingMachine machine = new VendingMachine();
 		machine.setAddress("Jihlavská 9");
 		machine.setNumber(230);
 		em.persist(machine);
+
+		Technician technician = em.find(Technician.class, 1L);
 
 		Audit audit = createAudit(new Date(113, 1, 5), machine);
 
@@ -255,14 +259,12 @@ public class StorageCycleLocalFacadeTest {
 		type.setBarcode("" + Math.random());
 		em.persist(type);
 
-		ProductStock stock = new ProductStock();
-		stock.setProductType(type);
-		stock.incrementCount(10);
-		em.persist(stock);
+		ProductStock stock = new ProductStock(10, type);
+		technician.addStock(stock);
 
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
-		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+		ServiceVisit visit = facade.visitVendingMachine(technician, machine, new Date(113, 1, 2), items);
 
 		AuditReport report = facade.exportAudits(audit);
 		assertNull(report.getLastAudit());
@@ -272,11 +274,13 @@ public class StorageCycleLocalFacadeTest {
 	}
 
 	@Test
-	public void testExportMoreAudits() {
+	public void testExportMoreAudits() throws StockNotAvailableException {
 		VendingMachine machine = new VendingMachine();
 		machine.setAddress("Jihlavská 9");
 		machine.setNumber(230);
 		em.persist(machine);
+
+		Technician technician = em.find(Technician.class, 1L);
 
 		Audit lastAudit = createAudit(new Date(113, 1, 2), machine);
 		Audit currentAudit = createAudit(new Date(113, 1, 5), machine);
@@ -286,14 +290,12 @@ public class StorageCycleLocalFacadeTest {
 		type.setBarcode("" + Math.random());
 		em.persist(type);
 
-		ProductStock stock = new ProductStock();
-		stock.setProductType(type);
-		stock.incrementCount(10);
-		em.persist(stock);
+		ProductStock stock = new ProductStock(10, type);
+		technician.addStock(stock);
 
 		Collection<ProductStock> items = new ArrayList<ProductStock>();
 		items.add(stock);
-		ServiceVisit visit = facade.visitVendingMachine(em.find(Technician.class, 1L), machine, new Date(113, 1, 2), items);
+		ServiceVisit visit = facade.visitVendingMachine(technician, machine, new Date(113, 1, 2), items);
 
 		AuditReport report = facade.exportAudits(currentAudit);
 		assertSame(lastAudit, report.getLastAudit());

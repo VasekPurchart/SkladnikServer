@@ -30,6 +30,13 @@ public class ProductStock implements Serializable {
 	@Min(1)
 	private int count;
 
+	public ProductStock() {}
+
+	public ProductStock(int count, ProductType productType) {
+		this.count = count;
+		this.productType = productType;
+	}
+
 	public ProductType getProductType() {
 		return productType;
 	}

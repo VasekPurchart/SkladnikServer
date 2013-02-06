@@ -24,6 +24,7 @@ public class ProductType implements Serializable {
 	 * Default value included to remove warning. Remove or modify at will. *
 	 */
 	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -43,6 +44,10 @@ public class ProductType implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getBarcode() {
+		return barcode;
 	}
 
 	public void setBarcode(String barcode) {

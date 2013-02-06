@@ -5,6 +5,8 @@ import cz.cvut.jboss.storagecycle.Person.Person;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.Product.StockNotAvailableException;
+import cz.cvut.jboss.storagecycle.Product.StockService;
 import cz.cvut.jboss.storagecycle.VendingMachine.Audit;
 import cz.cvut.jboss.storagecycle.VendingMachine.AuditLog;
 import cz.cvut.jboss.storagecycle.VendingMachine.Recipe;
@@ -52,7 +54,9 @@ public class InfinispanTest {
 					ServiceVisit.class,
 					VendingMachine.class,
 					Warehouse.class,
-					CacheManagerProducer.class
+					CacheManagerProducer.class,
+					StockService.class,
+					StockNotAvailableException.class
 				)
 				.addAsLibraries(resolver.artifact("org.infinispan:infinispan-core").resolveAsFiles())
     			.addAsResource(new File("src/main/resources/META-INF/persistence.xml"), "META-INF/persistence.xml")
