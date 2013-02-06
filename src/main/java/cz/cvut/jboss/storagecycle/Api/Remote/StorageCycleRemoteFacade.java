@@ -102,4 +102,14 @@ public class StorageCycleRemoteFacade {
 
 		return technicianDTOs;
 	}
+
+	public Collection<ProductStockDTO> getTechnicianItems(long technicianId) {
+		Technician technician = personRepository.findTechnicianById(technicianId);
+		Collection<ProductStockDTO> items = new ArrayList<ProductStockDTO>();
+		for (ProductStock productStock : technician.getItems()) {
+			items.add(new ProductStockDTO(productStock));
+		}
+
+		return items;
+	}
 }

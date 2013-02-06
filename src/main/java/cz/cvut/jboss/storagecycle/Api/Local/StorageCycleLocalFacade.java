@@ -70,13 +70,6 @@ public class StorageCycleLocalFacade {
 		em.flush();
 	}
 
-	public TechnicianUpdateData technicianUpdateData(Technician technician) {
-		Collection<ProductStock> items = getWarehouse().getItems();
-		Collection<VendingMachine> vendingMachines = em.createQuery("SELECT e FROM VendingMachine e").getResultList();
-
-		return new TechnicianUpdateData(items, vendingMachines);
-	}
-
 	public Audit sendAudit(Auditor auditor, VendingMachine machine, Collection<AuditLog> logs, Date date) {
 		Audit audit = Audit.create(auditor, machine, date);
 		em.persist(audit);

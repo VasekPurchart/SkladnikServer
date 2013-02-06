@@ -70,7 +70,6 @@ public class StorageCycleLocalFacadeTest {
 					ServiceVisit.class,
 					VendingMachine.class,
 					Warehouse.class,
-					TechnicianUpdateData.class,
 					StockService.class
 				).
 				addAsLibraries(resolver.artifact("org.infinispan:infinispan-core").resolveAsFiles())
@@ -182,19 +181,6 @@ public class StorageCycleLocalFacadeTest {
 		em.persist(visit);
 		facade.setCashWithdrawnForVisit(visit, 100);
 		assertEquals(100, visit.getWithdrawnCash());
-	}
-
-	@Test
-	public void testTechnicianUpdateData() {
-		ProductType type = new ProductType();
-		type.setName("Mirinda");
-		type.setBarcode("" + Math.random());
-		em.persist(type);
-		facade.importToWarehouse(type, 20);
-
-		TechnicianUpdateData data = facade.technicianUpdateData(em.find(Technician.class, 1L));
-		assertTrue(data.getItems().size() == 1);
-		assertEquals(1, data.getVendingMachines().size());
 	}
 
 	@Test
