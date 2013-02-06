@@ -1,5 +1,6 @@
 package cz.cvut.jboss.storagecycle.Api.Remote;
 
+import cz.cvut.jboss.storagecycle.Api.Local.AuditReport;
 import cz.cvut.jboss.storagecycle.Api.Local.StorageCycleLocalFacade;
 import cz.cvut.jboss.storagecycle.Person.Auditor;
 import cz.cvut.jboss.storagecycle.Person.PersonRepository;
@@ -76,5 +77,11 @@ public class StorageCycleRemoteFacade {
 		}
 
 		local.sendAudit(auditor, vendingMachine, logs, auditDTO.timestamp);
+	}
+
+	public AuditReportDTO exportAudits(long currentAuditId) {
+		AuditReport auditReport = local.exportAudits(vendingMachineRepository.findAuditById(currentAuditId));
+
+		return new AuditReportDTO(auditReport);
 	}
 }

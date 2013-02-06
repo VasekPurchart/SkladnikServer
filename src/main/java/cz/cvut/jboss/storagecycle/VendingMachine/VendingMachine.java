@@ -38,6 +38,10 @@ public class VendingMachine implements Serializable {
 	@OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "vendingMachine")
 	private List<Audit> audits = new ArrayList<Audit>();
 
+	public Long getId() {
+		return id;
+	}
+
 	public void addAudit(Audit audit) {
 		audits.add(audit);
 	}

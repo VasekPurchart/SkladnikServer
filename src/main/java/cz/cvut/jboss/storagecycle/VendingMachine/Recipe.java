@@ -40,4 +40,8 @@ public class Recipe implements Serializable {
 		this.productTypes = productTypes;
 		this.price = price;
 	}
+
+	public Long getId() {
+		return id;
+	}
 }

@@ -37,6 +37,10 @@ public class Person implements Serializable, Principal {
 	@Pattern(regexp = "\\d{15,17}")
 	private String phoneId;
 
+	public Long getId() {
+		return id;
+	}
+
 	@Override
 	public String getName() {
 		return name;

@@ -52,6 +52,10 @@ public class ServiceVisit implements Serializable {
 	@OneToMany(cascade = {CascadeType.PERSIST})
 	private List<ProductStock> items = new ArrayList<ProductStock>();
 
+	public Long getId() {
+		return id;
+	}
+
 	public Date getDateTime() {
 		return dateTime;
 	}
@@ -62,6 +66,14 @@ public class ServiceVisit implements Serializable {
 
 	public void setWithdrawnCash(int cash) {
 		this.withdrawnCash = cash;
+	}
+
+	public Technician getTechnician() {
+		return technician;
+	}
+
+	public VendingMachine getVendingMachine() {
+		return vendingMachine;
 	}
 
 	public void visit(VendingMachine vendingMachine, Technician technician, Date dateTime) {
