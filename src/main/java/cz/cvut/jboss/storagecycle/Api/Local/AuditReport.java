@@ -1,4 +1,4 @@
-package cz.cvut.jboss.storagecycle.Api;
+package cz.cvut.jboss.storagecycle.Api.Local;
 
 import cz.cvut.jboss.storagecycle.VendingMachine.Audit;
 import cz.cvut.jboss.storagecycle.VendingMachine.ServiceVisit;
