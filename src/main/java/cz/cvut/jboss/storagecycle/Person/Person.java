@@ -15,8 +15,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @XmlRootElement
-@Inheritance(strategy=InheritanceType.JOINED)
-@DiscriminatorColumn(name="type")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "type")
 public class Person implements Serializable, Principal {
 
 	/**

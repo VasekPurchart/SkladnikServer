@@ -40,5 +40,4 @@ public class Technician extends Person {
 	public List<ProductStock> getItems() {
 		return items;
 	}
-
 }

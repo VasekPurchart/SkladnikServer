@@ -1,7 +1,6 @@
 package cz.cvut.jboss.storagecycle.Product;
 
 import java.io.Serializable;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,38 +13,40 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class ProductStock implements Serializable {
-   /** Default value included to remove warning. Remove or modify at will. **/
-   private static final long serialVersionUID = 1L;
 
-   @Id
-   @GeneratedValue
-   private Long id;
+	/**
+	 * Default value included to remove warning. Remove or modify at will. *
+	 */
+	private static final long serialVersionUID = 1L;
 
-   @ManyToOne(cascade={CascadeType.PERSIST})
-   private ProductType productType;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-   @NotNull
-   @Min(1)
-   private int count;
+	@ManyToOne(cascade = {CascadeType.PERSIST})
+	private ProductType productType;
 
-   public ProductType getProductType() {
-	   return productType;
-   }
+	@NotNull
+	@Min(1)
+	private int count;
 
-   public void setProductType(ProductType type) {
-	   this.productType = type;
-   }
+	public ProductType getProductType() {
+		return productType;
+	}
 
-   public int getCount() {
-	   return count;
-   }
+	public void setProductType(ProductType type) {
+		this.productType = type;
+	}
 
-   public void incrementCount(int by) {
-	   count += by;
-   }
+	public int getCount() {
+		return count;
+	}
 
-   public void decrementCount(int by) {
-	   count -= by;
-   }
+	public void incrementCount(int by) {
+		count += by;
+	}
 
+	public void decrementCount(int by) {
+		count -= by;
+	}
 }
