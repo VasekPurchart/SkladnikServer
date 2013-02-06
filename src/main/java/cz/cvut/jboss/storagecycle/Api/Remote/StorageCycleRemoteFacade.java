@@ -84,4 +84,13 @@ public class StorageCycleRemoteFacade {
 
 		return new AuditReportDTO(auditReport);
 	}
+
+	public Collection<ProductTypeDTO> getProductTypes() {
+		Collection<ProductTypeDTO> productTypeDTOs = new ArrayList<ProductTypeDTO>();
+		for (ProductType productType : local.getProductTypes()) {
+			productTypeDTOs.add(new ProductTypeDTO(productType));
+		}
+
+		return productTypeDTOs;
+	}
 }
