@@ -98,6 +98,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testImportToWarehouse() {
 		ProductType type = new ProductType();
 		type.setName("CocaCola");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		facade.importToWarehouse(type, 20);
@@ -110,6 +111,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testTransferToTechnicianNonexistentStock() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("Pepsi");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		Technician technician = em.find(Technician.class, 1L);
@@ -120,6 +122,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testTransferToTechnicianDepletedStock() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("RC Cola");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		facade.importToWarehouse(type, 10);
@@ -132,6 +135,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testTransferToTechnician() throws StockNotAvailableException {
 		ProductType type = new ProductType();
 		type.setName("Coca Cola");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		facade.importToWarehouse(type, 20);
@@ -148,6 +152,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testVisitVendingMachine() {
 		ProductType type = new ProductType();
 		type.setName("Foo Bar");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		Technician technician = em.find(Technician.class, 1L);
@@ -181,6 +186,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testTechnicianUpdateData() {
 		ProductType type = new ProductType();
 		type.setName("Mirinda");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 		facade.importToWarehouse(type, 20);
 
@@ -198,6 +204,7 @@ public class StorageCycleLocalFacadeTest {
 
 		final ProductType type = new ProductType();
 		type.setName("Sprite");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		List<ProductType> types = new ArrayList<ProductType>() {{
@@ -221,6 +228,7 @@ public class StorageCycleLocalFacadeTest {
 
 		final ProductType type = new ProductType();
 		type.setName("Mirinda");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		List<ProductType> types = new ArrayList<ProductType>() {{
@@ -244,6 +252,7 @@ public class StorageCycleLocalFacadeTest {
 
 		final ProductType type = new ProductType();
 		type.setName("Cappy");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		ProductStock stock = new ProductStock();
@@ -274,6 +283,7 @@ public class StorageCycleLocalFacadeTest {
 
 		final ProductType type = new ProductType();
 		type.setName("Cappy");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 
 		ProductStock stock = new ProductStock();
@@ -296,6 +306,7 @@ public class StorageCycleLocalFacadeTest {
 	public void testGetProductTypes() {
 		ProductType type = new ProductType();
 		type.setName("Fanta");
+		type.setBarcode("" + Math.random());
 		em.persist(type);
 		em.flush();
 

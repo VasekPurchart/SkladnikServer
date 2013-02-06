@@ -6,8 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -17,6 +18,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ *
+ * @author vasek
+ */
 @Entity
 @XmlRootElement
 public class ProductType implements Serializable {
@@ -32,6 +37,10 @@ public class ProductType implements Serializable {
    @Pattern(regexp = "[A-Za-z0-9 ]*")
    private String name;
 
+   @NotNull
+   @Column(unique=true)
+   private String barcode;
+
    public String getName() {
 	   return name;
    }
@@ -39,5 +48,9 @@ public class ProductType implements Serializable {
    public void setName(String name) {
 	   this.name = name;
    }
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
 
 }
