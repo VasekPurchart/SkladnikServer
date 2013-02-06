@@ -61,4 +61,8 @@ public class VendingMachine implements Serializable {
 	public void setAddress(String address) {
 		this.adress = address;
 	}
+
+	public List<Recipe> getRecipes() {
+		return recipes;
+	}
 }

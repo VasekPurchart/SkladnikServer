@@ -112,4 +112,13 @@ public class StorageCycleRemoteFacade {
 
 		return items;
 	}
+
+	public Collection<VendingMachineDTO> getVendingMachines() {
+		Collection<VendingMachineDTO> machines = new ArrayList<VendingMachineDTO>();
+		for (VendingMachine vendingMachine : local.getVendingMachines()) {
+			machines.add(new VendingMachineDTO(vendingMachine));
+		}
+
+		return machines;
+	}
 }
