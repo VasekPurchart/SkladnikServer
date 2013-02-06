@@ -54,6 +54,13 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<repositories>
+		<repository>
+			<id>Jboss</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- First declare the APIs we depend on and need for compilation.
@@ -89,6 +96,13 @@
 			<groupId>org.jboss.spec.javax.ejb</groupId>
 			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.ejb3</groupId>
+			<artifactId>jboss-ejb3-ext-api</artifactId>
+			<scope>provided</scope>
+			<version>2.0.0</version>
 		</dependency>
 
 		<!-- JSR-303 (Bean Validation) Implementation -->

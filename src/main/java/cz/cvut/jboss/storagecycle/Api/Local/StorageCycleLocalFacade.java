@@ -18,8 +18,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
+import org.jboss.ejb3.annotation.Clustered;
 
 @Stateless
+@Clustered
 public class StorageCycleLocalFacade {
 
 	@Inject
