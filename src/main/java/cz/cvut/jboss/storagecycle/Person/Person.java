@@ -45,4 +45,8 @@ public class Person implements Serializable, Principal {
 	public String getName() {
 		return name;
 	}
+
+	public String getPhoneId() {
+		return phoneId;
+	}
 }

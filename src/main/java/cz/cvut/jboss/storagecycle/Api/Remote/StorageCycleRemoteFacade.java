@@ -93,4 +93,13 @@ public class StorageCycleRemoteFacade {
 
 		return productTypeDTOs;
 	}
+
+	public Collection<TechnicianDTO> getTechnicians() {
+		Collection<TechnicianDTO> technicianDTOs = new ArrayList<TechnicianDTO>();
+		for (Technician technician : local.getTechnicians()) {
+			technicianDTOs.add(new TechnicianDTO(technician));
+		}
+
+		return technicianDTOs;
+	}
 }
