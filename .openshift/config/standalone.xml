@@ -232,6 +232,11 @@
             </default-workmanager>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jdr:1.0"/>
+        
+				<subsystem xmlns="urn:jboss:domain:jmx:1.0">
+            <jmx-connector registry-binding="jmx-connector-registry" server-binding="jmx-connector-server" />
+        </subsystem>
+        
         <subsystem xmlns="urn:jboss:domain:jgroups:1.0" default-stack="tcp">
             <stack name="tcp">
                 <transport type="TCP" socket-binding="jgroups-tcp" /> 
