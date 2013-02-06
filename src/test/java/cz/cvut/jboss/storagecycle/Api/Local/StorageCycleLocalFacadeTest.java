@@ -198,7 +198,7 @@ public class StorageCycleLocalFacadeTest {
 		List<ProductType> types = new ArrayList<ProductType>() {{
 			add(type);
 		}};
-		Recipe recipe = new Recipe(types, 20);
+		Recipe recipe = new Recipe(types, 20, 1);
 
 		AuditLog log = new AuditLog(5, recipe);
 		logs.add(log);
@@ -222,7 +222,7 @@ public class StorageCycleLocalFacadeTest {
 		List<ProductType> types = new ArrayList<ProductType>() {{
 			add(type);
 		}};
-		Recipe recipe = new Recipe(types, 20);
+		Recipe recipe = new Recipe(types, 20, 1);
 
 		AuditLog log = new AuditLog(5, recipe);
 		logs.add(log);

@@ -33,15 +33,24 @@ public class Recipe implements Serializable {
 	@Min(0)
 	private int price;
 
+	@NotNull
+	@Min(1)
+	private int position;
+
 	public Recipe() {
 	}
 
-	public Recipe(List<ProductType> productTypes, int price) {
+	public Recipe(List<ProductType> productTypes, int price, int position) {
 		this.productTypes = productTypes;
 		this.price = price;
+		this.position = position;
 	}
 
 	public Long getId() {
 		return id;
+	}
+
+	public int getPosition() {
+		return position;
 	}
 }
