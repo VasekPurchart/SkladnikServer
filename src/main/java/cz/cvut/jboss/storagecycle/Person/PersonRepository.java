@@ -16,4 +16,7 @@ public class PersonRepository {
 		return em.find(Technician.class, id);
 	}
 
+	public Auditor findAuditorById(long id) {
+		return em.find(Auditor.class, id);
+	}
 }

@@ -1,12 +1,14 @@
 package cz.cvut.jboss.storagecycle.Api.Remote;
 
 import cz.cvut.jboss.storagecycle.Api.Local.StorageCycleLocalFacade;
+import cz.cvut.jboss.storagecycle.Person.Auditor;
 import cz.cvut.jboss.storagecycle.Person.PersonRepository;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductRepository;
 import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
 import cz.cvut.jboss.storagecycle.Product.StockNotAvailableException;
+import cz.cvut.jboss.storagecycle.VendingMachine.AuditLog;
 import cz.cvut.jboss.storagecycle.VendingMachine.ServiceVisit;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachineRepository;
@@ -62,5 +64,17 @@ public class StorageCycleRemoteFacade {
 	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) {
 		ServiceVisit serviceVisit = vendingMachineRepository.findServiceVisitById(serviceVisitId);
 		local.setCashWithdrawnForVisit(serviceVisit, cash);
+	}
+
+	public void sendAudit(AuditDTO auditDTO) {
+		Auditor auditor = personRepository.findAuditorById(auditDTO.personId);
+		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(auditDTO.vendingMachineId);
+
+		Collection<AuditLog> logs = new ArrayList<AuditLog>();
+		for (AuditLogDTO auditLogDTO : auditDTO.logs) {
+			logs.add(new AuditLog(auditLogDTO.counterState, vendingMachineRepository.findRecipeById(auditLogDTO.recipeId)));
+		}
+
+		local.sendAudit(auditor, vendingMachine, logs, auditDTO.timestamp);
 	}
 }

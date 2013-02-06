@@ -19,4 +19,8 @@ public class VendingMachineRepository {
 	public ServiceVisit findServiceVisitById(long id) {
 		return em.find(ServiceVisit.class, id);
 	}
+
+	public Recipe findRecipeById(long id) {
+		return em.find(Recipe.class, id);
+	}
 }
