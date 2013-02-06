@@ -37,13 +37,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class LocalFacadeTest {
+public class StorageCycleLocalFacadeTest {
 
 	@Inject
 	private EntityManager em;
 
     @Inject
-    private LocalFacade facade;
+    private StorageCycleLocalFacade facade;
 
     @Deployment
     public static Archive<?> getDeployment() {
@@ -54,7 +54,7 @@ public class LocalFacadeTest {
     			.addClasses(
 					EntityManagerProducer.class,
 					CacheManagerProducer.class,
-					LocalFacade.class,
+					StorageCycleLocalFacade.class,
 					StockNotAvailableException.class,
 					Person.class,
 					Technician.class,

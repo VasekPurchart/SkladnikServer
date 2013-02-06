@@ -19,7 +19,7 @@ import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 
 @Stateless
-public class LocalFacade {
+public class StorageCycleLocalFacade {
 
 	@Inject
 	private EntityManager em;
