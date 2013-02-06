@@ -1,11 +1,16 @@
 package cz.cvut.jboss.storagecycle.Api.Remote;
 
-import cz.cvut.jboss.storagecycle.Api.Local.StockNotAvailableException;
 import cz.cvut.jboss.storagecycle.Api.Local.StorageCycleLocalFacade;
 import cz.cvut.jboss.storagecycle.Person.PersonRepository;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductRepository;
+import cz.cvut.jboss.storagecycle.Product.ProductStock;
 import cz.cvut.jboss.storagecycle.Product.ProductType;
+import cz.cvut.jboss.storagecycle.Product.StockNotAvailableException;
+import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
+import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachineRepository;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -25,6 +30,9 @@ public class StorageCycleRemoteFacade {
 	@Inject
 	private PersonRepository personRepository;
 
+	@Inject
+	private VendingMachineRepository vendingMachineRepository;
+
 	public void importToWarehouse(String barcode, int count) {
 		ProductType productType = productRepository.findProductTypeByBarcode(barcode);
 		local.importToWarehouse(productType, count);
@@ -36,4 +44,17 @@ public class StorageCycleRemoteFacade {
 		local.transferToTechnician(productType, count, technician);
 	}
 
+	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StockNotAvailableException {
+		Technician technician = personRepository.findTechnicianById(serviceVisitDTO.technicianId);
+		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(serviceVisitDTO.vendingMachineId);
+
+		Collection items = new ArrayList<ProductStock>();
+		for (ProductStockDTO productStockDTO : serviceVisitDTO.items) {
+			ProductType productType = productRepository.findProductTypeByBarcode(productStockDTO.barcode);
+			ProductStock productStock = new ProductStock(productStockDTO.count, productType);
+			items.add(productStock);
+		}
+
+		local.visitVendingMachine(technician, vendingMachine, serviceVisitDTO.timestamp, items);
+	}
 }
