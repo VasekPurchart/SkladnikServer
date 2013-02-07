@@ -13,6 +13,6 @@ INSERT INTO `VendingMachine` (`id`, `address`, `number`) VALUES (1, 'Vodičkova 
 INSERT INTO `VendingMachine` (`id`, `address`, `number`) VALUES (2, 'Pelzova 1514', 3);
 
 -- ProductType
-INSERT INTO `ProductType` (`id`, `barcode`, `name`) VALUES (1, 1234, "Tatrkanka");
-INSERT INTO `ProductType` (`id`, `barcode`, `name`) VALUES (2, 555, "Fidorka");
-INSERT INTO `ProductType` (`id`, `barcode`, `name`) VALUES (3, 999, "Delisa");
+INSERT INTO `ProductType` (`id`, `barcode`, `name`) VALUES (1, "1234", "Tatrkanka");
+INSERT INTO `ProductType` (`id`, `barcode`, `name`) VALUES (2, "555", "Fidorka");
+INSERT INTO `ProductType` (`id`, `barcode`, `name`) VALUES (3, "999", "Delisa");
