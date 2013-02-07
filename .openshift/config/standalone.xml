@@ -99,7 +99,7 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jndi-name="java:jboss/datasources/storageCycle" enabled="true" use-java-context="true" pool-name="storageCycle">
+                <datasource jndi-name="java:/storageCycle" enabled="true" use-java-context="true" pool-name="storageCycle">
                     <connection-url>jdbc:mysql://127.5.69.129:3306/storagecycle2</connection-url>
                     <driver>mysql</driver>
                     <security>
