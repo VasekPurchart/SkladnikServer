@@ -38,6 +38,8 @@ public class Person implements Serializable, Principal {
 	@Pattern(regexp = "\\d{15,17}")
 	private String phoneId;
 
+	private String role;
+
 	public Long getId() {
 		return id;
 	}
