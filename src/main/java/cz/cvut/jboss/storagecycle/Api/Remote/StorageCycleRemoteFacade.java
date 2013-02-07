@@ -3,6 +3,7 @@ package cz.cvut.jboss.storagecycle.Api.Remote;
 import cz.cvut.jboss.storagecycle.Api.Local.AuditReport;
 import cz.cvut.jboss.storagecycle.Api.Local.StorageCycleLocalFacade;
 import cz.cvut.jboss.storagecycle.Person.Auditor;
+import cz.cvut.jboss.storagecycle.Person.Person;
 import cz.cvut.jboss.storagecycle.Person.PersonRepository;
 import cz.cvut.jboss.storagecycle.Person.Technician;
 import cz.cvut.jboss.storagecycle.Product.ProductRepository;
@@ -16,10 +17,15 @@ import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachineRepository;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ws.api.annotation.WebContext;
 
 /**
  *
@@ -27,6 +33,10 @@ import javax.persistence.EntityManager;
  */
 @Stateless
 @WebService(serviceName="api", endpointInterface="cz.cvut.jboss.storagecycle.Api.Remote.StorageCycleWS")
+@WebContext(authMethod = "BASIC", contextRoot = "api", urlPattern = "/*")
+@SecurityDomain("storagecycle-api")
+//@DeclareRoles({Person.ROLE_TECHNICIAN, Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
+@RolesAllowed({Person.ROLE_TECHNICIAN, Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
 public class StorageCycleRemoteFacade implements StorageCycleWS {
 
 	@Inject
@@ -45,6 +55,7 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	private EntityManager em;
 
 	@Override
+	//@RolesAllowed({Person.ROLE_DIRECTOR})
 	public void importToWarehouse(String barcode, int count) throws StorageCycleRemoteFacadeException {
 		try {
 			em.getTransaction().begin();
@@ -59,6 +70,7 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@RolesAllowed({Person.ROLE_DIRECTOR})
 	public void transferToTechnician(String barcode, int count, long technicianId) throws StorageCycleRemoteFacadeException {
 		try {
 			em.getTransaction().begin();
@@ -74,6 +86,7 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@RolesAllowed({Person.ROLE_TECHNICIAN})
 	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StorageCycleRemoteFacadeException {
 		try {
 			em.getTransaction().begin();
@@ -97,6 +110,7 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@RolesAllowed({Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
 	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) throws StorageCycleRemoteFacadeException {
 		try {
 			em.getTransaction().begin();
@@ -111,6 +125,7 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@RolesAllowed({Person.ROLE_TECHNICIAN})
 	public void sendAudit(AuditDTO auditDTO) throws StorageCycleRemoteFacadeException {
 		try {
 			em.getTransaction().begin();
@@ -138,6 +153,7 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@RolesAllowed({Person.ROLE_DIRECTOR})
 	public AuditReportDTO exportAudits(long currentAuditId) {
 		AuditReport auditReport = local.exportAudits(vendingMachineRepository.findAuditById(currentAuditId));
 
@@ -145,6 +161,8 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@PermitAll
+	//@RolesAllowed({Person.ROLE_TECHNICIAN, Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
 	public Collection<ProductTypeDTO> getProductTypes() {
 		Collection<ProductTypeDTO> productTypeDTOs = new ArrayList<ProductTypeDTO>();
 		for (ProductType productType : local.getProductTypes()) {
@@ -155,6 +173,8 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@PermitAll
+	//@RolesAllowed({Person.ROLE_TECHNICIAN, Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
 	public Collection<TechnicianDTO> getTechnicians() {
 		Collection<TechnicianDTO> technicianDTOs = new ArrayList<TechnicianDTO>();
 		for (Technician technician : local.getTechnicians()) {
@@ -165,6 +185,8 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@PermitAll
+	//@RolesAllowed({Person.ROLE_TECHNICIAN, Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
 	public Collection<ProductStockDTO> getTechnicianItems(long technicianId) {
 		Technician technician = personRepository.findTechnicianById(technicianId);
 		Collection<ProductStockDTO> items = new ArrayList<ProductStockDTO>();
@@ -176,6 +198,8 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@PermitAll
+	//@RolesAllowed({Person.ROLE_TECHNICIAN, Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
 	public Collection<VendingMachineDTO> getVendingMachines() {
 		Collection<VendingMachineDTO> machines = new ArrayList<VendingMachineDTO>();
 		for (VendingMachine vendingMachine : local.getVendingMachines()) {
@@ -186,6 +210,8 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	}
 
 	@Override
+	//@PermitAll
+	//@RolesAllowed({Person.ROLE_TECHNICIAN, Person.ROLE_AUDITOR, Person.ROLE_DIRECTOR})
 	public Collection<AuditDTO> getAudits(long vendingMachineId) {
 		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(vendingMachineId);
 		Collection<AuditDTO> audits = new ArrayList<AuditDTO>();

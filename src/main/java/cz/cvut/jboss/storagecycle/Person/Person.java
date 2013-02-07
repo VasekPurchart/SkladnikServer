@@ -20,6 +20,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @DiscriminatorColumn(name = "type")
 public class Person implements Serializable, Principal {
 
+	public final static String ROLE_TECHNICIAN = "technician";
+
+	public final static String ROLE_AUDITOR = "auditor";
+
+	public final static String ROLE_DIRECTOR = "director";
+
 	/**
 	 * Default value included to remove warning. Remove or modify at will. *
 	 */
@@ -37,6 +43,10 @@ public class Person implements Serializable, Principal {
 	@NotNull
 	@Pattern(regexp = "\\d{15,17}")
 	private String phoneId;
+
+	private String role;
+
+	private String passwordAuth;
 
 	public Long getId() {
 		return id;
