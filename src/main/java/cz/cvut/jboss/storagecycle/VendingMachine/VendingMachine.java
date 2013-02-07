@@ -30,7 +30,7 @@ public class VendingMachine implements Serializable {
 	private int number;
 
 	@NotNull
-	private String adress;
+	private String address;
 
 	@OneToMany(cascade = {CascadeType.PERSIST})
 	private List<Recipe> recipes = new ArrayList<Recipe>();
@@ -55,11 +55,11 @@ public class VendingMachine implements Serializable {
 	}
 
 	public String getAddress() {
-		return adress;
+		return address;
 	}
 
 	public void setAddress(String address) {
-		this.adress = address;
+		this.address = address;
 	}
 
 	public List<Recipe> getRecipes() {
