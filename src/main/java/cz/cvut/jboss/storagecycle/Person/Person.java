@@ -40,6 +40,8 @@ public class Person implements Serializable, Principal {
 
 	private String role;
 
+	private String passwordAuth;
+
 	public Long getId() {
 		return id;
 	}
