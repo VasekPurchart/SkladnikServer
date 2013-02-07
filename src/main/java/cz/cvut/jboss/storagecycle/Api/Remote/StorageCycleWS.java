@@ -11,15 +11,15 @@ import javax.jws.WebService;
 @WebService(name="storageCycleService")
 public interface StorageCycleWS {
 
-	public void importToWarehouse(String barcode, int count);
+	public void importToWarehouse(String barcode, int count) throws StorageCycleRemoteFacadeException;
 
-	public void transferToTechnician(String barcode, int count, long technicianId) throws StockNotAvailableException;
+	public void transferToTechnician(String barcode, int count, long technicianId) throws StorageCycleRemoteFacadeException;
 
-	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StockNotAvailableException;
+	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StorageCycleRemoteFacadeException;
 
-	public void setCashWithdrawnForVisit(long serviceVisitId, int cash);
+	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) throws StorageCycleRemoteFacadeException;
 
-	public void sendAudit(AuditDTO auditDTO);
+	public void sendAudit(AuditDTO auditDTO) throws StorageCycleRemoteFacadeException;
 
 	public AuditReportDTO exportAudits(long currentAuditId);
 

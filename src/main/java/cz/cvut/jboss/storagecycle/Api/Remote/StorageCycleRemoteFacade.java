@@ -45,70 +45,96 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	private EntityManager em;
 
 	@Override
-	public void importToWarehouse(String barcode, int count) {
-		em.getTransaction().begin();
+	public void importToWarehouse(String barcode, int count) throws StorageCycleRemoteFacadeException {
+		try {
+			em.getTransaction().begin();
 
-		ProductType productType = productRepository.findProductTypeByBarcode(barcode);
-		local.importToWarehouse(productType, count);
+			ProductType productType = productRepository.findProductTypeByBarcode(barcode);
+			local.importToWarehouse(productType, count);
 
-		em.getTransaction().commit();
-	}
-
-	@Override
-	public void transferToTechnician(String barcode, int count, long technicianId) throws StockNotAvailableException {
-		em.getTransaction().begin();
-
-		ProductType productType = productRepository.findProductTypeByBarcode(barcode);
-		Technician technician = personRepository.findTechnicianById(technicianId);
-		local.transferToTechnician(productType, count, technician);
-
-		em.getTransaction().commit();
-	}
-
-	@Override
-	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StockNotAvailableException {
-		em.getTransaction().begin();
-
-		Technician technician = personRepository.findTechnicianById(serviceVisitDTO.technicianId);
-		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(serviceVisitDTO.vendingMachineId);
-
-		Collection items = new ArrayList<ProductStock>();
-		for (ProductStockDTO productStockDTO : serviceVisitDTO.items) {
-			ProductType productType = productRepository.findProductTypeByBarcode(productStockDTO.barcode);
-			ProductStock productStock = new ProductStock(productStockDTO.count, productType);
-			items.add(productStock);
+			em.getTransaction().commit();
+		} catch (Throwable t) {
+			rollbackAndThrowThrowable(t);
 		}
-
-		local.visitVendingMachine(technician, vendingMachine, serviceVisitDTO.timestamp, items);
-
-		em.getTransaction().commit();
 	}
 
 	@Override
-	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) {
-		em.getTransaction().begin();
+	public void transferToTechnician(String barcode, int count, long technicianId) throws StorageCycleRemoteFacadeException {
+		try {
+			em.getTransaction().begin();
 
-		ServiceVisit serviceVisit = vendingMachineRepository.findServiceVisitById(serviceVisitId);
-		local.setCashWithdrawnForVisit(serviceVisit, cash);
+			ProductType productType = productRepository.findProductTypeByBarcode(barcode);
+			Technician technician = personRepository.findTechnicianById(technicianId);
+			local.transferToTechnician(productType, count, technician);
 
-		em.getTransaction().commit();
-	}
-
-	@Override
-	public void sendAudit(AuditDTO auditDTO) {
-		em.getTransaction().begin();
-
-		Auditor auditor = personRepository.findAuditorById(auditDTO.personId);
-		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(auditDTO.vendingMachineId);
-
-		Collection<AuditLog> logs = new ArrayList<AuditLog>();
-		for (AuditLogDTO auditLogDTO : auditDTO.logs) {
-			logs.add(new AuditLog(auditLogDTO.counterState, vendingMachineRepository.findRecipeById(auditLogDTO.recipeId)));
+			em.getTransaction().commit();
+		} catch (Throwable t) {
+			rollbackAndThrowThrowable(t);
 		}
+	}
 
-		local.sendAudit(auditor, vendingMachine, logs, auditDTO.timestamp);
+	@Override
+	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StorageCycleRemoteFacadeException {
+		try {
+			em.getTransaction().begin();
 
-		em.getTransaction().commit();
+			Technician technician = personRepository.findTechnicianById(serviceVisitDTO.technicianId);
+			VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(serviceVisitDTO.vendingMachineId);
+
+			Collection items = new ArrayList<ProductStock>();
+			for (ProductStockDTO productStockDTO : serviceVisitDTO.items) {
+				ProductType productType = productRepository.findProductTypeByBarcode(productStockDTO.barcode);
+				ProductStock productStock = new ProductStock(productStockDTO.count, productType);
+				items.add(productStock);
+			}
+
+			local.visitVendingMachine(technician, vendingMachine, serviceVisitDTO.timestamp, items);
+
+			em.getTransaction().commit();
+		} catch (Throwable t) {
+			rollbackAndThrowThrowable(t);
+		}
+	}
+
+	@Override
+	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) throws StorageCycleRemoteFacadeException {
+		try {
+			em.getTransaction().begin();
+
+			ServiceVisit serviceVisit = vendingMachineRepository.findServiceVisitById(serviceVisitId);
+			local.setCashWithdrawnForVisit(serviceVisit, cash);
+
+			em.getTransaction().commit();
+		} catch (Throwable t) {
+			rollbackAndThrowThrowable(t);
+		}
+	}
+
+	@Override
+	public void sendAudit(AuditDTO auditDTO) throws StorageCycleRemoteFacadeException {
+		try {
+			em.getTransaction().begin();
+			Auditor auditor = personRepository.findAuditorById(auditDTO.personId);
+			VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(auditDTO.vendingMachineId);
+
+			Collection<AuditLog> logs = new ArrayList<AuditLog>();
+			for (AuditLogDTO auditLogDTO : auditDTO.logs) {
+				logs.add(new AuditLog(auditLogDTO.counterState, vendingMachineRepository.findRecipeById(auditLogDTO.recipeId)));
+			}
+
+			local.sendAudit(auditor, vendingMachine, logs, auditDTO.timestamp);
+
+			em.getTransaction().commit();
+		} catch (Throwable t) {
+			rollbackAndThrowThrowable(t);
+		}
+	}
+
+	private void rollbackAndThrowThrowable(Throwable t) throws StorageCycleRemoteFacadeException {
+		if (em.getTransaction().isActive()) {
+			em.getTransaction().rollback();
+		}
+		throw new StorageCycleRemoteFacadeException(t.getMessage(), t.getCause());
 	}
 
 	@Override
