@@ -19,6 +19,7 @@ import java.util.Collection;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebService;
+import javax.persistence.EntityManager;
 
 /**
  *
@@ -40,21 +41,34 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 	@Inject
 	private VendingMachineRepository vendingMachineRepository;
 
+	@Inject
+	private EntityManager em;
+
 	@Override
 	public void importToWarehouse(String barcode, int count) {
+		em.getTransaction().begin();
+
 		ProductType productType = productRepository.findProductTypeByBarcode(barcode);
 		local.importToWarehouse(productType, count);
+
+		em.getTransaction().commit();
 	}
 
 	@Override
 	public void transferToTechnician(String barcode, int count, long technicianId) throws StockNotAvailableException {
+		em.getTransaction().begin();
+
 		ProductType productType = productRepository.findProductTypeByBarcode(barcode);
 		Technician technician = personRepository.findTechnicianById(technicianId);
 		local.transferToTechnician(productType, count, technician);
+
+		em.getTransaction().commit();
 	}
 
 	@Override
 	public void visitVendingMachine(ServiceVisitDTO serviceVisitDTO) throws StockNotAvailableException {
+		em.getTransaction().begin();
+
 		Technician technician = personRepository.findTechnicianById(serviceVisitDTO.technicianId);
 		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(serviceVisitDTO.vendingMachineId);
 
@@ -66,16 +80,24 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 		}
 
 		local.visitVendingMachine(technician, vendingMachine, serviceVisitDTO.timestamp, items);
+
+		em.getTransaction().commit();
 	}
 
 	@Override
 	public void setCashWithdrawnForVisit(long serviceVisitId, int cash) {
+		em.getTransaction().begin();
+
 		ServiceVisit serviceVisit = vendingMachineRepository.findServiceVisitById(serviceVisitId);
 		local.setCashWithdrawnForVisit(serviceVisit, cash);
+
+		em.getTransaction().commit();
 	}
 
 	@Override
 	public void sendAudit(AuditDTO auditDTO) {
+		em.getTransaction().begin();
+
 		Auditor auditor = personRepository.findAuditorById(auditDTO.personId);
 		VendingMachine vendingMachine = vendingMachineRepository.findVendingMachineById(auditDTO.vendingMachineId);
 
@@ -85,6 +107,8 @@ public class StorageCycleRemoteFacade implements StorageCycleWS {
 		}
 
 		local.sendAudit(auditor, vendingMachine, logs, auditDTO.timestamp);
+
+		em.getTransaction().commit();
 	}
 
 	@Override
