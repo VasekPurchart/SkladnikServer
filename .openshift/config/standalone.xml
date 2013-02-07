@@ -99,7 +99,7 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jndi-name="java:jboss/datasources/storageCycle" enabled="${mysql.enabled}" use-java-context="true" pool-name="storageCycle">
+                <datasource jndi-name="java:jboss/datasources/storageCycle" enabled="true" use-java-context="true" pool-name="storageCycle">
                     <connection-url>jdbc:mysql://127.5.69.129:3306/storagecycle2</connection-url>
                     <driver>mysql</driver>
                     <security>
@@ -249,12 +249,12 @@ the socketbinding referenced by the EJB remoting connector -->
                     <property name="bind_port">7600</property>
                     <property name="bind_addr">${env.OPENSHIFT_INTERNAL_IP}</property>
                 </transport>
-                <protocol type="TCPPING">
+                <!--<protocol type="TCPPING">
                  <property name="timeout">3000</property>
                  <property name="initial_hosts">${env.OPENSHIFT_JBOSS_CLUSTER}</property>
                  <property name="port_range">0</property>
                  <property name="num_initial_members">1</property>
-                </protocol>
+                </protocol>-->
                 <protocol type="MERGE2"/>
                 <protocol type="FD"/>
                 <protocol type="VERIFY_SUSPECT"/>
