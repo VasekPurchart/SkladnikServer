@@ -16,10 +16,13 @@ import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachine;
 import cz.cvut.jboss.storagecycle.VendingMachine.VendingMachineRepository;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.persistence.EntityManager;
+import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ws.api.annotation.WebContext;
 
 /**
  *
@@ -27,6 +30,9 @@ import javax.persistence.EntityManager;
  */
 @Stateless
 @WebService(serviceName="api", endpointInterface="cz.cvut.jboss.storagecycle.Api.Remote.StorageCycleWS")
+@WebContext(authMethod = "BASIC", contextRoot = "api", urlPattern = "/*")
+@SecurityDomain("storagecycle-api")
+@RolesAllowed({"technician"})
 public class StorageCycleRemoteFacade implements StorageCycleWS {
 
 	@Inject
